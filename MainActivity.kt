@@ -35,6 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         //Обработка запросов поиска
 
+        /*Пример рецептов без БД
+        val recipes = listOf(
+            Recipe("Рецепт1", R.drawable.ic_launcher_foreground, "Описание1"),
+            Recipe("Рецепт2", R.drawable.ic_launcher_foreground, "Описание2"),
+            Recipe("Рецепт3", R.drawable.ic_launcher_foreground, "Описание3")  
+        )
+        */
+
     }
 
     class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
