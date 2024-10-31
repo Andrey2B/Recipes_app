@@ -37,9 +37,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipes[position]
-        holder.titleTextView.text = recipe.name
-        holder.descriptionTextView.text = recipe.description
-        holder.imageView.setImageResource(recipe.image)
+        holder.bind(recipe)
     }
 
     override fun getItemCount(): Int {
@@ -54,7 +52,9 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
 
 
         fun bind(recipe: Recipe) {
-            //функция призывает данные о рецепте(картинки и др)
+            titleTextView.text = recipe.name
+            descriptionTextView.text = recipe.description
+            imageView.setImageResource(recipe.image)
         }
     }
 
