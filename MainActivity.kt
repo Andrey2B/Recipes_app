@@ -38,9 +38,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipes[position]
-        holder.titleTextView.name = recipe.name
-        holder.descriptionTextView.image = recipe.description
-        holder.imageView.description = recipe.image
+        holder.bind(recipe)
     }
 
     override fun getItemCount(): Int {
@@ -53,9 +51,11 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
         private val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
         private val imageView: ImageView = itemView.findViewById(R.id.recipeImage)
 
-
+        //функция призывает данные о рецепте(картинки и др)
         fun bind(recipe: Recipe) {
-            //функция призывает данные о рецепте(картинки и др)
+            titleTextView.text = recipe.name
+            descriptionTextView.text = recipe.description
+            imageView.setImageResource(recipe.image)
         }
     }
 
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         //Вика попытайся прикрепить картинки с 3 рецептами (картинки в drawable), нужно для кода под комментом
         //Если что-то исправишь - пиши
 
-        var recipes = listOf(
+        val recipes = listOf(
             Recipe("Рецепт1", R.drawable.ic_launcher_foreground, "Описание1"),
             Recipe("Рецепт2", R.drawable.ic_launcher_foreground, "Описание2"),
             Recipe("Рецепт3", R.drawable.ic_launcher_foreground, "Описание3")
