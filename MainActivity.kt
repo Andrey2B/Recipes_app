@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         //Пример рецептов без БД
+        //Вика попытайся прикрепить картинки с 3 рецептами (картинки в drawable), нужно для кода под комментом
+        //Если что-то исправишь - пиши
         var recipes = listOf(
             Recipe("Рецепт1", R.drawable.ic_launcher_foreground, "Описание1"),
             Recipe("Рецепт2", R.drawable.ic_launcher_foreground, "Описание2"),
