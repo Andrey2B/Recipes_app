@@ -1,57 +1,106 @@
-package com.example.myapplication
-
+import android.media.Image
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.ImageView
+import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
-
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 
+data class Recipe(
+    val name: String,
+    val image: Int,
+    val description: String
+)
 
-data class Item(val text: String)
+////type???
+class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
 
-class ItemAdapter(private val itemList: List<Item>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+    //Метод, который вызывается RecyclerView при создании нового представления для элемента списка
+    override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecipeViewHolder {
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(R.id.itemTextView)
+        //LayoutInflater – это класс, который умеет из содержимого layout-файла создать View-элемент.
+        // Метод который это делает называется inflate.
+
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
+        //Вике. Создай отдельнвй layout (item_recipe)
+        // (в нем распиши элементы с индефикаторами recipeTitle, recipeDescription, recipeImage),
+        //т.е. все, что юует содержаться в ячейке с рецептом
+        return RecipeViewHolder(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
-        return ItemViewHolder(view)
+    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        val recipe = recipes[position]
+        holder.titleTextView.text = recipe.name
+        holder.descriptionTextView.text = recipe.description
+        holder.imageView.setImageResource(recipe.image)
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = itemList[position]
-        holder.textView.text = item.text
+    override fun getItemCount(): Int {
+        return recipes.size
     }
 
-    override fun getItemCount() = itemList.size
+    //Класс связывает данные с View, отображаемым в элементе списка
+    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val titleTextView: TextView = itemView.findViewById(R.id.recipeTitle)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
+        val imageView: ImageView = itemView.findViewById(R.id.recipeImage)
+
+
+        fun bind(recipe: Recipe) {
+            //функция призывает данные о рецепте(картинки и др)
+        }
+    }
+
+    //Заполним адаптер данными с БД
+    fun fillAdapter(){
+
+    }
 }
+
 
 class MainActivity : AppCompatActivity() {
 
+    //activity_main - XML файл с макетом с EditText и RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-        // Создайте список данных
-        val items = listOf(
-            Item("Элемент 1"),
-            Item("Элемент 2"),
-            Item("Элемент 3"),
-            Item("Элемент 4")
+        //Пример рецептов без БД
+        //Вика попытайся прикрепить картинки с 3 рецептами (картинки в drawable), нужно для кода под комментом
+        //Если что-то исправишь - пиши
+
+        var recipes = listOf(
+            Recipe("Рецепт1", R.drawable.recipe1, "Описание1"),
+            Recipe("Рецепт2", R.drawable.recipe2, "Описание2"),
+            Recipe("Рецепт3", R.drawable.recipe3, "Описание3")
         )
 
-        // Найдите RecyclerView и установите для него LayoutManager и Adapter
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ItemAdapter(items)
+        val searchRecipe: SearchView
+        val recipesList: RecyclerView
+
+
+        recipesList = findViewById(R.id.recyclerView)
+
+        //установим для RecycleView LayoutManager и Adapter
+        recipesList.layoutManager = LinearLayoutManager(this)
+        recipesList.adapter = RecyclerAdapter(recipes)
+
+
+        //Обработка запросов поиска
+
     }
+
 }
