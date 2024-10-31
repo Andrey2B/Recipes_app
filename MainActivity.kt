@@ -33,19 +33,26 @@ class MainActivity : AppCompatActivity() {
         searchRecipe = findViewById(R.id.searchRecipe)
         recipesList = findViewById(R.id.recipesList)
 
-        //Обработка запросов поиска
+        class Recipe(
+            val name: String,
+            val image: Int,
+            val description: String
+        )
 
-        /*Пример рецептов без БД
-        val recipes = listOf(
+        //Пример рецептов без БД
+        var recipes = listOf(
             Recipe("Рецепт1", R.drawable.ic_launcher_foreground, "Описание1"),
             Recipe("Рецепт2", R.drawable.ic_launcher_foreground, "Описание2"),
-            Recipe("Рецепт3", R.drawable.ic_launcher_foreground, "Описание3")  
+            Recipe("Рецепт3", R.drawable.ic_launcher_foreground, "Описание3")
         )
-        */
+
+
+        //Обработка запросов поиска
 
     }
 
-    class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
+////type??? 
+    class RecyclerAdapter(private var recipes) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
 
         //Метод, который вызывается RecyclerView при создании нового представления для элемента списка
         override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecipeViewHolder {
