@@ -1,15 +1,13 @@
-package com.example.recipeappnewmisis
-
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.ImageView
-import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.view.View
+import android.view.ViewGroup
+import android.widget.SearchView
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,6 @@ data class Recipe(
     val description: String
 )
 
-////type???
 class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
 
     //Метод, который вызывается RecyclerView при создании нового представления для элемента списка
@@ -30,8 +27,8 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
         // Метод который это делает называется inflate.
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
-        //Вике. Создай отдельнвй layout (item_recipe)
-        // (в нем распиши элементы с индефикаторами recipeTitle, recipeDescription, recipeImage),
+        //Создать отдельнвй layout (item_recipe)
+        // (в нем расписать элементы с индефикаторами recipeTitle, recipeDescription, recipeImage),
         //т.е. все, что юует содержаться в ячейке с рецептом
         return RecipeViewHolder(view)
     }
@@ -46,12 +43,12 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
     }
 
     //Класс связывает данные с View, отображаемым в элементе списка
-    inner class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val titleTextView: TextView = itemView.findViewById(R.id.recipeTitle)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
-        private val imageView: ImageView = itemView.findViewById(R.id.recipeImage)
+    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val titleTextView: TextView = itemView.findViewById(R.id.recipeTitle)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
+        val imageView: ImageView = itemView.findViewById(R.id.recipeImage)
 
-        //функция призывает данные о рецепте(картинки и др)
+
         fun bind(recipe: Recipe) {
             titleTextView.text = recipe.name
             descriptionTextView.text = recipe.description
@@ -83,17 +80,17 @@ class MainActivity : AppCompatActivity() {
         //Вика попытайся прикрепить картинки с 3 рецептами (картинки в drawable), нужно для кода под комментом
         //Если что-то исправишь - пиши
 
-        val recipes = listOf(
-            Recipe("Рецепт1", R.drawable.ic_launcher_foreground, "Описание1"),
-            Recipe("Рецепт2", R.drawable.ic_launcher_foreground, "Описание2"),
-            Recipe("Рецепт3", R.drawable.ic_launcher_foreground, "Описание3")
+        var recipes = listOf(
+            Recipe("Рецепт1", R.drawable.recipe1, "Описание1"),
+            Recipe("Рецепт2", R.drawable.recipe2, "Описание2"),
+            Recipe("Рецепт3", R.drawable.recipe3, "Описание3")
         )
 
         val searchRecipe: SearchView
         val recipesList: RecyclerView
 
-        searchRecipe = findViewById(R.id.searchRecipe)
-        recipesList = findViewById(R.id.recipesList)
+
+        recipesList = findViewById(R.id.recyclerView)
 
         //установим для RecycleView LayoutManager и Adapter
         recipesList.layoutManager = LinearLayoutManager(this)
