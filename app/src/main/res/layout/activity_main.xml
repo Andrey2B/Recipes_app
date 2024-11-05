@@ -14,5 +14,11 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-60dp" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Введите текст для поиска" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

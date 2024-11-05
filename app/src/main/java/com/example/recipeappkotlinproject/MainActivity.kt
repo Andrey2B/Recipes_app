@@ -5,15 +5,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.widget.SearchView
+
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
+
+import androidx.appcompat.widget.SearchView
+
+
+
 
 data class Recipe(
     val name: String,
     val image: Int,
     val description: String
 )
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,13 +43,15 @@ class MainActivity : AppCompatActivity() {
 
         val searchRecipe: SearchView
         val recipesList: RecyclerView
-
+        val searchView: SearchView
 
         recipesList = findViewById(R.id.recyclerView)
 
         //Set for RecycleView "LayoutManager" and "Adapter"
         recipesList.layoutManager = LinearLayoutManager(this)
         recipesList.adapter = RecyclerAdapter(recipes)
+
+        searchView = findViewById(R.id.searchView)
 
 
         //processing of the request and the search
