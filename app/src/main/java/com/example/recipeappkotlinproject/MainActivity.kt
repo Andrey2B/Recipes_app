@@ -3,15 +3,12 @@ package com.example.recipeappkotlinproject
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
-
-import androidx.appcompat.widget.SearchView
-
-
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.FirebaseDatabase
 
 
 data class Recipe(
@@ -53,7 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         searchView = findViewById(R.id.searchView)
 
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("message")
 
+        myRef.setValue("Hello, World!")
         //processing of the request and the search
 
     }
