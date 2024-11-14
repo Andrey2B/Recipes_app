@@ -16,9 +16,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
         // Метод который это делает называется inflate.
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
-        //Создать отдельнвй layout (item_recipe)
-        // (в нем расписать элементы с индефикаторами recipeTitle, recipeDescription, recipeImage),
-        //т.е. все, что юует содержаться в ячейке с рецептом
+
         return RecipeViewHolder(view)
     }
 

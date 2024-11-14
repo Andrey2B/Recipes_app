@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
-
+import com.google.firebase.database.ValueEventListener
 
 data class Recipe(
     val name: String,
@@ -17,7 +17,11 @@ data class Recipe(
     val description: String
 )
 
-
+class newUser(){
+    val Name:String = "Kolya"
+    val Email:String = "@gmail.com"
+    val id:Int = 1
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
 
         //Examples of recipes
         var recipes = listOf(
@@ -48,12 +54,20 @@ class MainActivity : AppCompatActivity() {
         recipesList.layoutManager = LinearLayoutManager(this)
         recipesList.adapter = RecyclerAdapter(recipes)
 
-        searchView = findViewById(R.id.searchView)
 
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("message")
+//"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
 
-        myRef.setValue("Hello, World!")
+        val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
+        val myRef = database.getReference("test-message")
+        val myDB = database.getReference()
+        val user = newUser()
+        myRef.setValue(user)
+
+
+
+
+
+
         //processing of the request and the search
 
     }
