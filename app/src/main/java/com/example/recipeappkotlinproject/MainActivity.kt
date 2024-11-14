@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.DataSnapshot
+
 
 data class Recipe(
     val name: String,
@@ -56,12 +58,34 @@ class MainActivity : AppCompatActivity() {
 
 
 //"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
+        fun dbSave() {
+            val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
+            val myRef = database.getReference("test-message")
+            val user = newUser()
+            //myRef.setValue(user)
+        }
 
-        val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-        val myRef = database.getReference("test-message")
-        val myDB = database.getReference()
-        val user = newUser()
-        myRef.setValue(user)
+        /*fun dbRead(){
+            val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
+            val myRef = database.getReference("test-message")
+
+            myRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    val value = dataSnapshot.getValue<String>()
+                    Log.d(TAG, "Value is: $value")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Failed to read value
+                    Log.w(TAG, "Failed to read value.", error.toException())
+                }
+            })
+        }*/
+
+
+
 
 
 
