@@ -62,23 +62,18 @@ class MainActivity : AppCompatActivity() {
         recipesList.adapter = RecyclerAdapter(recipes)
 
 
-//"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
+                                                    //"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
         fun dbSave() {
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
             val myRef = database.getReference("test-message")
             val user = newUser()
-            //myRef.setValue(user)
+            myRef.setValue(user)
         }
 
         fun dbRead(){
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-            val myRef = database.getReference()
+            val myRef = database.getReference("1")
             var refUsers: DatabaseReference? = null
-
-
-
-
-
 
             myRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -94,6 +89,8 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+
+        dbRead()
 
 
 
