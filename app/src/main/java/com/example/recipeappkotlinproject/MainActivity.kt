@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.SearchView
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 
@@ -15,9 +16,10 @@ data class Recipe(
     val description: String
 )
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val searchRecipe: SearchView
-        val recipesList: RecyclerView
+        var recipesList: RecyclerView
 
 
         recipesList = findViewById(R.id.recyclerView)
@@ -48,5 +50,4 @@ class MainActivity : AppCompatActivity() {
         //processing of the request and the search
 
     }
-
 }
