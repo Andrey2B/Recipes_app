@@ -1,6 +1,8 @@
 package com.example.recipeappkotlinproject
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -11,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.getValue
 
 
 data class Recipe(
@@ -65,9 +70,15 @@ class MainActivity : AppCompatActivity() {
             //myRef.setValue(user)
         }
 
-        /*fun dbRead(){
+        fun dbRead(){
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-            val myRef = database.getReference("test-message")
+            val myRef = database.getReference()
+            var refUsers: DatabaseReference? = null
+
+
+
+
+
 
             myRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -82,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG, "Failed to read value.", error.toException())
                 }
             })
-        }*/
+        }
 
 
 
