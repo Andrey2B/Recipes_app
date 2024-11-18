@@ -72,16 +72,24 @@ class MainActivity : AppCompatActivity() {
 
         fun dbRead(){
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-            val myRef = database.getReference("1")
+            val myRef = database.reference
             var refUsers: DatabaseReference? = null
+            val message = "Пример логирования на русском языке"
+            Log.d("MyTag", message)
+
+
 
             myRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
-                    val value = dataSnapshot.getValue<String>()
-                    Log.d(TAG, "Value is: $value")
+                    for (snap in dataSnapshot.children) {
+                        // Чтение данных как Map или преобразование в модель данных
+                        val data = snap.value
+                        Log.d("FirebaseData", "Данные: $data")
+                    }
                 }
+
 
                 override fun onCancelled(error: DatabaseError) {
                     // Failed to read value
