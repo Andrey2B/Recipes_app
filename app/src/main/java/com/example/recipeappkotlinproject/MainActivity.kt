@@ -2,6 +2,7 @@ package com.example.recipeappkotlinproject
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.getValue
+import com.google.firebase.database.values
+import kotlinx.coroutines.tasks.await
 
 
 data class Recipe(
@@ -63,30 +66,34 @@ class MainActivity : AppCompatActivity() {
 
 
                                                     //"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
-        fun dbSave() {
+        fun dbSave() {                              //"https://aaa1-8022d-default-rtdb.firebaseio.com"
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
             val myRef = database.getReference("test-message")
             val user = newUser()
-            myRef.setValue(user)
+            myRef.setValue("TEST1")
+            Log.d("SAVE_DATA", "saved")
         }
 
         fun dbRead(){
             val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
             val myRef = database.reference
             var refUsers: DatabaseReference? = null
-            val message = "Пример логирования на русском языке"
-            Log.d("MyTag", message)
-
-
+            //val message = "Пример логирования на русском языке"
+            //Log.d("MyTag", message)
+            Log.d("MGGGG", "Данные")
+            val writeRef = database.getReference("test-message")
+            writeRef.setValue("TEST1")
 
             myRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
+
                     for (snap in dataSnapshot.children) {
                         // Чтение данных как Map или преобразование в модель данных
                         val data = snap.value
                         Log.d("FirebaseData", "Данные: $data")
+                        println(data)
                     }
                 }
 
@@ -96,9 +103,12 @@ class MainActivity : AppCompatActivity() {
                     Log.w(TAG, "Failed to read value.", error.toException())
                 }
             })
-        }
+            writeRef.removeValue()
+            Log.d("DELETE", "Test Deleted")
 
-        dbRead()
+        }
+        //dbSave()
+        //dbRead()
 
 
 
