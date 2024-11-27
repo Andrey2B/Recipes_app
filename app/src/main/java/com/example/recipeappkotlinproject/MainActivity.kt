@@ -1,5 +1,6 @@
 package com.example.recipeappkotlinproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ data class Recipe(
 
 class MainActivity : AppCompatActivity(){
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         //setTheme(R.style.Theme_RecipeApp)
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity(){
         val categoryRecipes4: ImageView
         val categoryRecipes5: ImageView
         val categoryRecipes6: ImageView
+        val homeIkon: ImageView
+        val newsIkon: ImageView
+        val profileIkon: ImageView
 
 
         //var recipesList: RecyclerView
@@ -64,6 +69,10 @@ class MainActivity : AppCompatActivity(){
         categoryRecipes4 = findViewById(R.id.imageView5)
         categoryRecipes5 = findViewById(R.id.imageView6)
         categoryRecipes6 = findViewById(R.id.imageView7)
+        newsIkon = findViewById(R.id.imageView9)
+        homeIkon = findViewById(R.id.imageView10)
+        profileIkon = findViewById(R.id.imageView11)
+
 
 
         favoriteButton.setOnClickListener {
@@ -78,6 +87,23 @@ class MainActivity : AppCompatActivity(){
             val itemView = LayoutInflater.from(this).inflate(R.layout.item_recipe, parent, false)
             parent.addView(itemView)
 
+        }
+
+        homeIkon.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            this.startActivity(intent)
+        }
+
+        /*
+            newsIkon.setOnClickListener{
+            val intent = Intent(this, NewsActivity::class.java)
+            this.startActivity(intent)
+        }
+         */
+
+        profileIkon.setOnClickListener{
+            val intent = Intent(this, ProfileActivity::class.java)
+            this.startActivity(intent)
         }
 
 

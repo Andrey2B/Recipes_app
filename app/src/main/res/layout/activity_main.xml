@@ -73,70 +73,96 @@
         android:id="@+id/imageView2"
         android:layout_width="120dp"
         android:layout_height="117dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/imageView5"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.323"
         app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="120dp"
         android:layout_height="122dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/imageView6"
         app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="121dp"
         android:layout_height="121dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/imageView7"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="100dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView6"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.812"
         app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="123dp"
         android:layout_height="119dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="108dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="119dp"
         android:layout_height="119dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="108dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/app_name"/>
+        tools:srcCompat="@tools:sample/avatars" />
 
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="126dp"
+        android:layout_height="122dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+        app:srcCompat="@mipmap/news_foreground" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="135dp"
+        android:layout_height="125dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView11"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:srcCompat="@mipmap/home_foreground" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="125dp"
+        android:layout_height="111dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:srcCompat="@mipmap/profile_foreground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
