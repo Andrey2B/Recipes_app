@@ -27,11 +27,6 @@ data class Recipe(
     val description: String
 )
 
-class newUser(){
-    val Name:String = "Kolya"
-    val Email:String = "@gmail.com"
-    val id:Int = 1
-}
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val recipesList: RecyclerView
         val searchView: SearchView
 
+
         recipesList = findViewById(R.id.recyclerView)
 
         //Set for RecycleView "LayoutManager" and "Adapter"
@@ -66,49 +62,9 @@ class MainActivity : AppCompatActivity() {
 
 
                                                     //"https://eat-eat-5f6b6-default-rtdb.firebaseio.com"
-        fun dbSave() {                              //"https://aaa1-8022d-default-rtdb.firebaseio.com"
-            val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-            val myRef = database.getReference("test-message")
-            val user = newUser()
-            myRef.setValue("TEST1")
-            Log.d("SAVE_DATA", "saved")
-        }
-
-        fun dbRead(){
-            val database = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com")
-            val myRef = database.reference
-            var refUsers: DatabaseReference? = null
-            //val message = "Пример логирования на русском языке"
-            //Log.d("MyTag", message)
-            Log.d("MGGGG", "Данные")
-            val writeRef = database.getReference("test-message")
-            writeRef.setValue("TEST1")
-
-            myRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-
-                    for (snap in dataSnapshot.children) {
-                        // Чтение данных как Map или преобразование в модель данных
-                        val data = snap.value
-                        Log.d("FirebaseData", "Данные: $data")
-                        println(data)
-                    }
-                }
 
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Failed to read value
-                    Log.w(TAG, "Failed to read value.", error.toException())
-                }
-            })
-            writeRef.removeValue()
-            Log.d("DELETE", "Test Deleted")
 
-        }
-        //dbSave()
-        //dbRead()
 
 
 
