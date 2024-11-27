@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
@@ -15,7 +14,6 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
     override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecipeViewHolder {
         //LayoutInflater is a class that can create a View element from the contents of a layout file
         // The method that does this is called inflate.
-
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
         return RecipeViewHolder(view)
     }
@@ -23,6 +21,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipes[position]
         holder.bind(recipe)
+
 
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, DetailActivity::class.java)
