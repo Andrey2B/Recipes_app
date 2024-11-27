@@ -89,17 +89,20 @@ class MainActivity : AppCompatActivity(){
 
         }
 
+        /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
         }
 
-        /*
+         */
+
+
             newsIkon.setOnClickListener{
             val intent = Intent(this, NewsActivity::class.java)
             this.startActivity(intent)
         }
-         */
+
 
         profileIkon.setOnClickListener{
             val intent = Intent(this, ProfileActivity::class.java)
