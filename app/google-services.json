@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "829459977587",
+    "firebase_url": "https://recipeappkt-default-rtdb.firebaseio.com",
+    "project_id": "recipeappkt",
+    "storage_bucket": "recipeappkt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829459977587:android:c5919d96450f3f9eb9e106",
+        "android_client_info": {
+          "package_name": "com.example.newestgov"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHDK-XrXSAun417iX8AxXo1pA9oOQMc2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829459977587:android:852f7112b4eaef23b9e106",
+        "android_client_info": {
+          "package_name": "com.example.recipeappkotlinproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHDK-XrXSAun417iX8AxXo1pA9oOQMc2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
