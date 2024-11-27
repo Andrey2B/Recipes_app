@@ -1,5 +1,6 @@
 package com.example.recipeappkotlinproject
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,29 +10,34 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
 
-    //Метод, который вызывается RecyclerView при создании нового представления для элемента списка
+    //Method that RecyclerView calls when creating a new view for a list item
     override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecipeViewHolder {
-
-        //LayoutInflater – это класс, который умеет из содержимого layout-файла создать View-элемент.
-        // Метод который это делает называется inflate.
-
+        //LayoutInflater is a class that can create a View element from the contents of a layout file
+        // The method that does this is called inflate.
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
-        //Создать отдельнвй layout (item_recipe)
-        // (в нем расписать элементы с индефикаторами recipeTitle, recipeDescription, recipeImage),
-        //т.е. все, что юует содержаться в ячейке с рецептом
         return RecipeViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipes[position]
         holder.bind(recipe)
+
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("RECIPE_NAME", recipe.name)
+            intent.putExtra("RECIPE_IMAGE", recipe.image)
+            intent.putExtra("RECIPE_DESCRIPTION", recipe.description)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
         return recipes.size
     }
 
-    //Класс связывает данные с View, отображаемым в элементе списка
+
+    //The class binds data to the View displayed in the list item
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.recipeTitle)
         private val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
@@ -42,12 +48,12 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
             imageView.setImageResource(recipe.image)
             titleTextView.text = recipe.name
             descriptionTextView.text = recipe.description
-
         }
     }
 
-    //Заполним адаптер данными с БД
+    //Let's fill the adapter with data from the database
     fun fillAdapter(){
 
     }
+
 }
