@@ -38,6 +38,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
