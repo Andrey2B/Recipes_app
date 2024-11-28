@@ -89,19 +89,40 @@ class MainActivity : AppCompatActivity(){
             this.startActivity(intent)
         }
 
+<<<<<<< HEAD
+=======
+        filterButton.setOnClickListener{
+            //LayoutInflater.from(this).inflate(R.layout.item_recipe, this, false)
+
+            val parent = findViewById<ConstraintLayout>(R.id.main)
+            val itemView = LayoutInflater.from(this).inflate(R.layout.item_recipe, parent, false)
+            parent.addView(itemView)
+
+        }
+
+>>>>>>> 32440e551b02e94978928a5a2959efd5317b7d11
         /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
         }
+<<<<<<< HEAD
          */
 
 
+=======
+        */
+        
+>>>>>>> 32440e551b02e94978928a5a2959efd5317b7d11
             newsIkon.setOnClickListener{
             val intent = Intent(this, NewsActivity::class.java)
             this.startActivity(intent)
         }
+<<<<<<< HEAD
 
+=======
+         
+>>>>>>> 32440e551b02e94978928a5a2959efd5317b7d11
 
         profileIkon.setOnClickListener{
             val intent = Intent(this, ProfileActivity::class.java)
