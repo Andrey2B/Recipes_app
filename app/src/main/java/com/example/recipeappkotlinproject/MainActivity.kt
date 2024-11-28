@@ -3,7 +3,6 @@ package com.example.recipeappkotlinproject
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.recipeappkotlinproject.databinding.ActivityMainBinding
 
 data class Recipe(
     val name: String,
@@ -21,18 +20,28 @@ data class Recipe(
 
 class MainActivity : AppCompatActivity(){
 
+    lateinit var binding: ActivityMainBinding
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        //setTheme(R.style.Theme_RecipeApp)
-
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
+        //setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.button4.setOnClickListener{
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.filter_holder, FilterFragment.newInstance())
+                .commit()
+
         }
 
         //Examples of recipes
@@ -80,21 +89,11 @@ class MainActivity : AppCompatActivity(){
             this.startActivity(intent)
         }
 
-        filterButton.setOnClickListener{
-            //LayoutInflater.from(this).inflate(R.layout.item_recipe, this, false)
-
-            val parent = findViewById<ConstraintLayout>(R.id.main)
-            val itemView = LayoutInflater.from(this).inflate(R.layout.item_recipe, parent, false)
-            parent.addView(itemView)
-
-        }
-
         /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
         }
-
          */
 
 
