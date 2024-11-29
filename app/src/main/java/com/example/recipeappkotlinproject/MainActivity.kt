@@ -65,6 +65,11 @@ class MainActivity : AppCompatActivity(){
         val newsIkon: ImageView
         val profileIkon: ImageView
 
+        val DB: Products_DB = Products_DB()
+        DB.Save_DB("test1", "122")
+        DB.Read_DB()
+
+
 
         //var recipesList: RecyclerView
 
@@ -93,9 +98,7 @@ class MainActivity : AppCompatActivity(){
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
-        }
-         */
-
+        }*/
 
             newsIkon.setOnClickListener{
             val intent = Intent(this, NewsActivity::class.java)
