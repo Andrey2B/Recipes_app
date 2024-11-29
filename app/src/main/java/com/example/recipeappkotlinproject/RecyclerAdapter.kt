@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<RecyclerAdapter.RecipeViewHolder>() {
 
-    //Метод, который вызывается RecyclerView при создании нового представления для элемента списка
+    //Method that RecyclerView raises when creating a new view for a list of items
     override fun onCreateViewHolder (parent: ViewGroup, viewType: Int): RecipeViewHolder {
 
-        //LayoutInflater – это класс, который умеет из содержимого layout-файла создать View-элемент.
-        // Метод который это делает называется inflate.
+        //LayoutInflater – this is a class that can create a View element from the contents of a layout file
+        //The method that does this is called inflate.
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
 
@@ -29,7 +29,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
         return recipes.size
     }
 
-    //Класс связывает данные с View, отображаемым в элементе списка
+    //The class binds data to the View displayed in the list item
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.recipeTitle)
         private val descriptionTextView: TextView = itemView.findViewById(R.id.recipeDescription)
@@ -44,7 +44,7 @@ class RecyclerAdapter(private var recipes: List<Recipe>) : RecyclerView.Adapter<
         }
     }
 
-    //Заполним адаптер данными с БД
+    //fill the adapter with data from the database
     fun fillAdapter(){
 
     }
