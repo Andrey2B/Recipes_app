@@ -3,14 +3,20 @@ package com.example.recipeappkotlinproject
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.concurrent.CountDownLatch
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 
 class Products_DB {
 
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
+
     fun Save_DB(key: String, value: String){
         val database = test_db
         val myRef = database.getReference(key)
@@ -24,7 +30,7 @@ class Products_DB {
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-
+                    println(snapshot.child("recipes").child("11").child("name_recipe").value)
                     for (snap in snapshot.children) {
 
                         val data = snap.value
@@ -40,6 +46,33 @@ class Products_DB {
                 Log.e("READ_ERR", "read error: ${error.message}")
             }
         })
+    }
+
+    fun findRecipeByName(databaseRef: DatabaseReference, recipeName: String) {
+        // Используем запрос для поиска по названию рецепта
+        databaseRef.orderByChild("0").equalTo(recipeName)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (child in snapshot.children) {
+                            // Приводим данные к типу Map<String, Any>
+                            val recipe = child.value as? Map<String, Any>
+                            if (recipe != null) {
+                                println("Рецепт найден:")
+                                println("ID: ${recipe["id_recipe"]}")
+                                println("Название: ${recipe["name_recipe"]}")
+                                return
+                            }
+                        }
+                    } else {
+                        println("Рецепт с названием \"$recipeName\" не найден")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    println("Ошибка при чтении данных: ${error.message}")
+                }
+            })
     }
 
 
