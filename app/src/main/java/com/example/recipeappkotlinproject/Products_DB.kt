@@ -14,6 +14,7 @@ import kotlin.coroutines.resumeWithException
 
 class Products_DB {
 
+
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
 
@@ -30,7 +31,8 @@ class Products_DB {
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    println(snapshot.child("recipes").child("11").child("name_recipe").value)
+                    println(snapshot.value.toString())
+                    println(snapshot.child("recipes").child("1").child("name_recipe").value)
                     for (snap in snapshot.children) {
 
                         val data = snap.value
@@ -49,13 +51,13 @@ class Products_DB {
     }
 
     fun findRecipeByName(databaseRef: DatabaseReference, recipeName: String) {
-        // Используем запрос для поиска по названию рецепта
-        databaseRef.orderByChild("0").equalTo(recipeName)
+
+        databaseRef.child("recipes").orderByChild("name_recipe").equalTo(recipeName)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         for (child in snapshot.children) {
-                            // Приводим данные к типу Map<String, Any>
+
                             val recipe = child.value as? Map<String, Any>
                             if (recipe != null) {
                                 println("Рецепт найден:")

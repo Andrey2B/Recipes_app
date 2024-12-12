@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(){
         val DB: Products_DB = Products_DB()
 
         DB.Read_DB()
-        //DB.findRecipeByName(DB.real_db.reference, "recipes")
+        DB.findRecipeByName(DB.real_db.reference, "яичница")
 
 
 
