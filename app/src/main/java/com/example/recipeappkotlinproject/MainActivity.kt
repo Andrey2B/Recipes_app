@@ -68,8 +68,22 @@ class MainActivity : AppCompatActivity(){
         val DB: Products_DB = Products_DB()
 
         DB.Read_DB()
-        DB.findRecipeByName(DB.real_db.reference, "яичница")
+        val databaseRef = DB.real_db.reference
+        val recipeName = "яичница"
 
+        
+        DB.findRecipeByName(DB.real_db.reference, recipeName) { recipe ->
+            if (recipe != null) {
+                println("Рецепт найден:")
+                println("ID: ${recipe.id_recipe}")
+                println("Название: ${recipe.name_recipe}")
+            } else {
+                println("Рецепт с названием \"$recipeName\" не найден.")
+            }
+        }
+
+
+        //DB.Save_DB("12312", "123")
 
 
         //var recipesList: RecyclerView
