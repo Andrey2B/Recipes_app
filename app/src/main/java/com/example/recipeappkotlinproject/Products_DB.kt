@@ -1,21 +1,16 @@
 package com.example.recipeappkotlinproject
 
 import android.util.Log
-import androidx.compose.animation.core.snap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.concurrent.CountDownLatch
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 
 class Products_DB {
 
-    data class Recipe(val id_recipe: Int = 0, val name_recipe: String = "")
+    data class Recipe(val image_url: String, val name_recipe: String, val id_recipe: String)
 
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
@@ -54,33 +49,45 @@ class Products_DB {
     }
 
 
-    fun findRecipeByName(databaseRef: DatabaseReference, recipeName: String, resultCallback: (Recipe?) -> Unit) {
-        databaseRef.child("recipes").orderByChild("name_recipe").equalTo(recipeName)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        for (child in snapshot.children) {
-                            val recipe = child.getValue(Recipe::class.java)
-                            if (recipe != null) {
+    fun findRecipeByName(databaseRef: DatabaseReference, keyword: String, resultCallback: (List<Recipe>) -> Unit) {
+        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val recipesList = mutableListOf<Pair<Recipe, Int>>()
 
-                                resultCallback(recipe) // Возвращаем найденный рецепт
-                                println("Return recipe")
-                                return
+                if (snapshot.exists()) {
+                    for (snap in snapshot.child("recipes").children) {
+                        val recipeMap = snap.value as? Map<*, *>
+                        println(recipeMap.toString())
+                        if (recipeMap != null) {
+                            val recipe = Recipe(
+                                id_recipe = recipeMap["id_recipe"]?.toString() ?: "",
+                                name_recipe = recipeMap["name_recipe"]?.toString() ?: "",
+                                image_url = recipeMap["image_url"]?.toString() ?: ""
+                            )
+                            val count = countKeywordOccurrences(recipe.name_recipe, keyword)
+                            if (count > 0) {
+                                recipesList.add(recipe to count)
                             }
                         }
                     }
-                    else {
-                        println("321")
-                        resultCallback(null) // Если рецепт не найден
-                    }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    println("Ошибка при чтении данных: ${error.message}")
-                    resultCallback(null) // Ошибка при чтении данных
-                }
-            })
+                val sortedRecipes = recipesList.sortedByDescending { it.second }.map { it.first }
+
+                resultCallback(sortedRecipes)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Ошибка при чтении данных: ${error.message}")
+                resultCallback(emptyList())
+            }
+        })
     }
+
+    fun countKeywordOccurrences(text: String, keyword: String): Int {
+        return Regex(keyword, RegexOption.IGNORE_CASE).findAll(text).count()
+    }
+
 
 
 }

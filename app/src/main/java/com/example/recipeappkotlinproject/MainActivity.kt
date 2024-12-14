@@ -69,16 +69,17 @@ class MainActivity : AppCompatActivity(){
 
         DB.Read_DB()
         val databaseRef = DB.real_db.reference
-        val recipeName = "яичница"
+        val recipeName = "макароны"
 
-        
-        DB.findRecipeByName(DB.real_db.reference, recipeName) { recipe ->
-            if (recipe != null) {
-                println("Рецепт найден:")
-                println("ID: ${recipe.id_recipe}")
-                println("Название: ${recipe.name_recipe}")
+
+        DB.findRecipeByName(databaseRef, recipeName) { recipes ->
+            if (recipes.isNotEmpty()) {
+                println("Найдены рецепты с ключевым словом \"$recipeName\":")
+                recipes.forEach { recipe ->
+                    println("ID: ${recipe.id_recipe}, Название: ${recipe.name_recipe}")
+                }
             } else {
-                println("Рецепт с названием \"$recipeName\" не найден.")
+                println("Рецептов с ключевым словом \"$recipeName\" не найдено.")
             }
         }
 
