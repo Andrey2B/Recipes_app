@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.SearchView
 import com.example.recipeappkotlinproject.databinding.ActivityMainBinding
 
+
 data class Recipe(
     val name: String,
     val image: Int,
@@ -65,11 +66,48 @@ class MainActivity : AppCompatActivity(){
         val newsIkon: ImageView
         val profileIkon: ImageView
 
+
+
         val DB: Products_DB = Products_DB()
+        val userRecipe = Products_DB.Recipe("https://example.com/images/duck_in_furs.jpg", "Утка под шубой, возвращение", "")
+
+
+        val databaseRef = DB.real_db.reference
+        val recipeName = "утка"
+
+        //DB.real_db.reference.child("recipes").child("-OE6R7MieZA7xo0AkuWk").removeValue()
+        // Сохранение рецепта
+        /*
+        DB.saveRecipeToDatabase(
+        databaseRef = databaseRef,
+        recipe = userRecipe,
+        onSuccess = {
+            println("Рецепт успешно сохранен в базу данных!")
+        },
+        onError = { error ->
+            println("Ошибка при сохранении рецепта: $error")
+        })
+        */
+        /*
+        val user = Products_DB.User(
+            name_user = "NewUser",
+            password = "securePassword123",
+            id_favourite_recipes = "1,2,3"
+        )
+
+        DB.saveUserToDatabase(
+            databaseRef = databaseRef,
+            user = user,
+            onSuccess = {
+                println("Пользователь успешно сохранён!")
+            },
+            onError = { errorMessage ->
+                println("Ошибка сохранения пользователя: $errorMessage")
+            }
+        )
+        */
 
         DB.Read_DB()
-        val databaseRef = DB.real_db.reference
-        val recipeName = "макароны"
 
 
         DB.findRecipeByName(databaseRef, recipeName) { recipes ->
@@ -83,8 +121,6 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
-
-        //DB.Save_DB("12312", "123")
 
 
         //var recipesList: RecyclerView
