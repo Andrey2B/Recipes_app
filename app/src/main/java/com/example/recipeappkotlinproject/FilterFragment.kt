@@ -9,9 +9,9 @@ import android.widget.ImageView
 
 class FilterFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,8 +24,7 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val closeFilter: ImageView
-        closeFilter = view.findViewById(R.id.imageView8)
+        val closeFilter: ImageView = view.findViewById(R.id.imageView8)
 
         closeFilter.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction()
