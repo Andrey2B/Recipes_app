@@ -11,7 +11,7 @@ import com.google.firebase.database.ValueEventListener
 class Products_DB {
 
     data class Recipe(val image_url: String = "", val name_recipe: String = "", val id_recipe: String = "")
-    data class Recipe_fav(val name: String = "", val image: String = "")
+
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
 
