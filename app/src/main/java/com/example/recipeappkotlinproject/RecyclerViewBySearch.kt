@@ -22,11 +22,11 @@ class RecyclerViewBySearch : AppCompatActivity() {
     //var recipesList: RecyclerView
 
     //Examples of recipes(repaet from mainActivity)
-    var recipes = listOf(
+    /*var recipes = listOf(
         Recipe("Рецепт1", R.drawable.recipe1, "Описание1"),
         Recipe("Рецепт2", R.drawable.recipe2, "Описание2"),
         Recipe("Рецепт3", R.drawable.recipe3, "Описание3")
-    )
+    )*/
 
 
     //recipesList = findViewById(R.id.recyclerView)
