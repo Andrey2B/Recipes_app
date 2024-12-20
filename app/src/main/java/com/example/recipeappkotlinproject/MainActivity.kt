@@ -10,12 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.SearchView
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipeappkotlinproject.databinding.ActivityMainBinding
 
 data class Recipe(
+    val id_recipe: Int,
     val name: String,
-    val image: Int,
+    val image: String,
     val description: String
+)
+
+data class Recipe_fav(
+    val name: String,
+    val image: String
 )
 
 class MainActivity : AppCompatActivity(){
@@ -35,14 +43,36 @@ class MainActivity : AppCompatActivity(){
             insets
         }
 
-        binding.button4.setOnClickListener{
-
+        binding.imageView.setOnClickListener{
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.filter_holder, FilterFragment.newInstance())
                 .commit()
 
         }
+
+        //Examples of categories
+        val categories = listOf(
+            Category("Завтраки", R.drawable.recipe1),
+            Category("Обеды", R.drawable.recipe2),
+            Category("Ужины", R.drawable.recipe3)
+        )
+
+        val categoryAdapter = CategoryAdapter(categories)
+        binding.categoriesRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.categoriesRecyclerView.adapter = categoryAdapter
+
+        /*val fav_recipes = listOf(
+            Recipe_fav("Пирог", R.drawable.recipe1),
+            Recipe_fav("Салат", R.drawable.recipe2),
+            Recipe_fav("Блины", R.drawable.recipe3)
+        )*/
+
+        /*val recipeAdapter = FavoriteRecipeAdapter(fav_recipes)
+        binding.favoriteRecipesRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.favoriteRecipesRecyclerView.adapter = recipeAdapter*/
 
         //Examples of recipes
         /*var recipes = listOf(
@@ -51,9 +81,49 @@ class MainActivity : AppCompatActivity(){
             Recipe("Рецепт3", R.drawable.recipe3, "Описание3")
         )*/
 
+        val database = Products_DB()
+
+        val DB = Products_DB()
+
+        DB.Read_DB()
+        val databaseRef = DB.real_db.reference
+        val recipeName = "макароны"
+
+        DB.findRecipeByName(databaseRef, recipeName) { recipes ->
+            if (recipes.isNotEmpty()) {
+                println("Найдены рецепты с ключевым словом \"$recipeName\":")
+                recipes.forEach { recipe ->
+                    println("ID: ${recipe.id_recipe}, Название: ${recipe.name_recipe}")
+                }
+            } else {
+                println("Рецептов с ключевым словом \"$recipeName\" не найдено.")
+            }
+        }
+
+
+// Идентификатор текущего пользователя
+        val userId = 1
+
+        database.getFavoriteRecipes(
+            userId,
+            onSuccess = { favoriteRecipes ->
+                // Устанавливаем адаптер с данными из Firebase
+                val recipeAdapter = FavoriteRecipeAdapter(favoriteRecipes)
+                binding.favoriteRecipesRecyclerView.layoutManager =
+                    LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
+            },
+            onFailure = { error ->
+                // Обрабатываем ошибку
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            }
+        )
+
+
+
+
         val searchRecipe: SearchView
-        val filterButton: Button
-        val favoriteButton: Button
+        val filterIkon: ImageView
         val shoppingBasket: Button
         val categoryRecipes1: ImageView
         val categoryRecipes2: ImageView
@@ -62,37 +132,26 @@ class MainActivity : AppCompatActivity(){
         val categoryRecipes5: ImageView
         val categoryRecipes6: ImageView
         val homeIkon: ImageView
-        val newsIkon: ImageView
+        val favoriteIkon: ImageView
         val profileIkon: ImageView
 
-        val DB: Products_DB = Products_DB()
-        DB.Save_DB("test1", "122")
-        DB.Read_DB()
+
+       // val DB = Products_DB()
+       // DB.Save_DB("test1", "122")
+        //DB.Read_DB()
 
 
 
         //var recipesList: RecyclerView
 
         searchRecipe = findViewById(R.id.searchView)
-        filterButton = findViewById(R.id.button4)
-        favoriteButton = findViewById(R.id.button)
-        shoppingBasket = findViewById(R.id.button2)
-        categoryRecipes1 = findViewById(R.id.imageView2)
-        categoryRecipes2 = findViewById(R.id.imageView3)
-        categoryRecipes3 = findViewById(R.id.imageView4)
-        categoryRecipes4 = findViewById(R.id.imageView5)
-        categoryRecipes5 = findViewById(R.id.imageView6)
-        categoryRecipes6 = findViewById(R.id.imageView7)
-        newsIkon = findViewById(R.id.imageView9)
+        filterIkon = findViewById(R.id.imageView)
+        //shoppingBasket = findViewById(R.id.button2)
+        favoriteIkon = findViewById(R.id.imageView9)
         homeIkon = findViewById(R.id.imageView10)
         profileIkon = findViewById(R.id.imageView11)
 
 
-
-        favoriteButton.setOnClickListener {
-            val intent = Intent(this, FavoriteList::class.java)
-            this.startActivity(intent)
-        }
 
         /*
         homeIkon.setOnClickListener{
@@ -100,19 +159,18 @@ class MainActivity : AppCompatActivity(){
             this.startActivity(intent)
         }*/
 
-            newsIkon.setOnClickListener{
-            val intent = Intent(this, NewsActivity::class.java)
+        favoriteIkon.setOnClickListener{
+            val intent = Intent(this, FavoriteActivity::class.java)
             this.startActivity(intent)
         }
-
 
         profileIkon.setOnClickListener{
             val intent = Intent(this, ProfileActivity::class.java)
             this.startActivity(intent)
         }
 
-
         //processing of the request and the search
 
+        database.Read_DB()
     }
 }
