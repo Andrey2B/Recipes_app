@@ -136,8 +136,8 @@ class MainActivity : AppCompatActivity(){
         val profileIkon: ImageView
 
 
-       // val DB = Products_DB()
-       // DB.Save_DB("test1", "122")
+        // val DB = Products_DB()
+        // DB.Save_DB("test1", "122")
         //DB.Read_DB()
 
 
