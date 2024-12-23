@@ -70,6 +70,14 @@ class Products_DB {
         val id_favourite_recipes: String = ""
     )
 
+    fun deleteUser(
+        databaseRef: DatabaseReference,
+        id_user: Int
+    )
+    {
+        databaseRef.child("users").child(id_user.toString())
+    }
+
     fun saveUserToDatabase(
         databaseRef: DatabaseReference,
         user: User,
