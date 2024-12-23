@@ -153,6 +153,7 @@ class MainActivity : AppCompatActivity(){
 
 
 
+
         /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -164,10 +165,30 @@ class MainActivity : AppCompatActivity(){
             this.startActivity(intent)
         }
 
+        searchRecipe.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Когда пользователь завершает ввод и нажимает "поиск"
+                if (!query.isNullOrEmpty()) {
+                    val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                    intent.putExtra("searchQuery", query) // Передаем запрос в SearchActivity
+                    startActivity(intent)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Здесь можно реализовать динамическую логику, если нужно обрабатывать ввод в реальном времени
+                return false // Возвращаем false, если не используем обработку в реальном времени
+            }
+        })
+
+
         profileIkon.setOnClickListener{
             val intent = Intent(this, ProfileActivity::class.java)
             this.startActivity(intent)
         }
+
+
 
         //processing of the request and the search
 

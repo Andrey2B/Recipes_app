@@ -10,7 +10,6 @@ import com.google.firebase.database.ValueEventListener
 
 class Products_DB {
 
-    data class Recipe(val image_url: String = "", val name_recipe: String = "", val id_recipe: String = "")
 
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
@@ -26,7 +25,7 @@ class Products_DB {
 
     fun saveRecipeToDatabase(
         databaseRef: DatabaseReference,
-        recipe: Recipe,
+        recipe: RecipeAdapter.Recipe,
 
         onSuccess: () -> Unit,
         onError: (String) -> Unit
@@ -136,17 +135,17 @@ class Products_DB {
     }
 
 
-    fun findRecipeByName(databaseRef: DatabaseReference, keyword: String, resultCallback: (List<Recipe>) -> Unit) {
+    fun findRecipeByName(databaseRef: DatabaseReference, keyword: String, resultCallback: (List<RecipeAdapter.Recipe>) -> Unit) {
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val recipesList = mutableListOf<Pair<Recipe, Int>>()
+                val recipesList = mutableListOf<Pair<RecipeAdapter.Recipe, Int>>()
 
                 if (snapshot.exists()) {
                     for (snap in snapshot.child("recipes").children) {
                         val recipeMap = snap.value as? Map<*, *>
                         println(recipeMap.toString())
                         if (recipeMap != null) {
-                            val recipe = Recipe(
+                            val recipe = RecipeAdapter.Recipe(
                                 id_recipe = recipeMap["id_recipe"]?.toString() ?: "",
                                 name_recipe = recipeMap["name_recipe"]?.toString() ?: "",
                                 image_url = recipeMap["image_url"]?.toString() ?: ""
