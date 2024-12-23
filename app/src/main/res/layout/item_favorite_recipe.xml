@@ -11,7 +11,7 @@
         android:layout_width="411dp"
         android:layout_height="143dp"
         android:layout_gravity="center"
-        android:src="@drawable/recipe1" />
+        android:src="@drawable/recipe_det" />
 
     <TextView
         android:id="@+id/FavoriteRecipeTitle"
