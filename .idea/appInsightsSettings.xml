@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.recipeappkotlinproject" />
-                  <option name="mobileSdkAppId" value="1:829459977587:android:852f7112b4eaef23b9e106" />
-                  <option name="projectId" value="recipeappkt" />
-                  <option name="projectNumber" value="829459977587" />
+                  <option name="mobileSdkAppId" value="1:256995929149:android:b34765dfcfc1d29cff4e54" />
+                  <option name="projectId" value="eat-eat-5f6b6" />
+                  <option name="projectNumber" value="256995929149" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
