@@ -3,6 +3,7 @@ package com.example.recipeappkotlinproject
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,9 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipeappkotlinproject.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 data class Recipe(
     val id_recipe: Int,
@@ -28,6 +32,11 @@ data class Recipe_fav(
 
 class MainActivity : AppCompatActivity(){
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
+
+
     lateinit var binding: ActivityMainBinding
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +51,8 @@ class MainActivity : AppCompatActivity(){
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        auth = FirebaseAuth.getInstance()
 
         binding.imageView.setOnClickListener{
             supportFragmentManager
@@ -83,13 +94,14 @@ class MainActivity : AppCompatActivity(){
 
         val database = Products_DB()
 
-        val DB = Products_DB()
+        //val DB = Products_DB()
 
-        DB.Read_DB()
-        val databaseRef = DB.real_db.reference
+        database.Read_DB()
+        val databaseRef = database.real_db.reference
         val recipeName = "макароны"
 
-        DB.findRecipeByName(databaseRef, recipeName) { recipes ->
+
+        database.findRecipeByName(databaseRef, recipeName) { recipes ->
             if (recipes.isNotEmpty()) {
                 println("Найдены рецепты с ключевым словом \"$recipeName\":")
                 recipes.forEach { recipe ->
@@ -100,24 +112,25 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
-
-// Идентификатор текущего пользователя
-        val userId = 1
+        //Current user ID
+        val userId = auth.currentUser?.uid
 
         database.getFavoriteRecipes(
             userId,
             onSuccess = { favoriteRecipes ->
-                // Устанавливаем адаптер с данными из Firebase
+                //Installing the adapter with data from Firebase
                 val recipeAdapter = FavoriteRecipeAdapter(favoriteRecipes)
                 binding.favoriteRecipesRecyclerView.layoutManager =
                     LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
                 binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
             },
             onFailure = { error ->
-                // Обрабатываем ошибку
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
         )
+
+
+
 
 
 
@@ -159,18 +172,73 @@ class MainActivity : AppCompatActivity(){
             this.startActivity(intent)
         }*/
 
+
         favoriteIkon.setOnClickListener{
-            val intent = Intent(this, FavoriteActivity::class.java)
-            this.startActivity(intent)
+            checkUserStatusInFavorite()
         }
+
 
         profileIkon.setOnClickListener{
-            val intent = Intent(this, ProfileActivity::class.java)
-            this.startActivity(intent)
+            checkUserStatusInProfile()
         }
 
-        //processing of the request and the search
+    }
 
-        database.Read_DB()
+    private fun checkUserStatusInFavorite() {
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            //User in the account, perform the action
+            doSomethingForLoggedInUserInFavorite()
+        } else {
+            //The user is not logged in, go to the registration/login screen
+            navigateToLoginOrRegisterInFavorite()
+        }
+    }
+
+    private fun doSomethingForLoggedInUserInFavorite() {
+        val userId = auth.currentUser?.uid
+        val intent = Intent(this, FavoriteActivity::class.java)
+        intent.putExtra("USER_ID", userId)
+        this.startActivity(intent)
+
+        //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToLoginOrRegisterInFavorite() {
+        //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
+
+    private fun checkUserStatusInProfile() {
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            //User in the account, perform the action
+            doSomethingForLoggedInUserInProfile()
+        } else {
+            //The user is not logged in, go to the registration/login screen
+            navigateToLoginOrRegisterInProfile()
+        }
+    }
+
+    private fun doSomethingForLoggedInUserInProfile() {
+        val userId = auth.currentUser?.uid
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("USER_ID", userId)
+        this.startActivity(intent)
+
+        //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToLoginOrRegisterInProfile() {
+        //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

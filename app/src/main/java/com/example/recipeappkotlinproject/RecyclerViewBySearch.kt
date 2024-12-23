@@ -18,8 +18,6 @@ class RecyclerViewBySearch : AppCompatActivity() {
         }
     }
 
-    //val searchRecipe: SearchView
-    //var recipesList: RecyclerView
 
     //Examples of recipes(repaet from mainActivity)
     /*var recipes = listOf(
@@ -31,8 +29,5 @@ class RecyclerViewBySearch : AppCompatActivity() {
 
     //recipesList = findViewById(R.id.recyclerView)
 
-    //Set for RecycleView "LayoutManager" and "Adapter"
-    //recipesList.layoutManager = LinearLayoutManager(this)
-    //recipesList.adapter = RecyclerAdapter(recipes)
 
 }

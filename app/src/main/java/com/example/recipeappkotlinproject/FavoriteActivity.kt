@@ -23,18 +23,6 @@ class FavoriteActivity : AppCompatActivity() {
     private val database =
         FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/").reference
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_favorite)*/
-
-    /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }*/
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,7 +38,15 @@ class FavoriteActivity : AppCompatActivity() {
             insets
         }
 
-        val userId = 1 // id for every user
+        //Get userId from Intent
+        val userId = intent.getIntExtra("USER_ID", -1) //Default -1 if no data
+
+        if (userId != -1) {
+            loadFavoriteRecipes(userId)
+        } else {
+            Toast.makeText(this, "Favorite recipes could not be loaded. Try again.", Toast.LENGTH_SHORT).show()
+        }
+
         loadFavoriteRecipes(userId)
 
 

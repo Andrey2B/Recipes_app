@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <paths xmlns:android="http://schemas.android.com/apk/res/android">
+        <!-- Разрешаем доступ к внешнему хранилищу -->
+        <external-path
+            name="external_files"
+            path="." />
+        <!-- Если вы хотите разрешить доступ только к определенным директориям, вы можете использовать более специфичные пути -->
+    </paths>
+</PreferenceScreen>

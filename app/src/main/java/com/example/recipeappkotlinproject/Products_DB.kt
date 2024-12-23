@@ -67,8 +67,10 @@ class Products_DB {
     data class User(
         val id_user: String = "",
         val name_user: String = "",
+        val email: String,
         val password: String = "",
-        val id_favourite_recipes: String = ""
+        val id_favourite_recipes: String = "",
+        var face_pic: String = ""
     )
 
     fun saveUserToDatabase(
@@ -79,7 +81,7 @@ class Products_DB {
     {
         databaseRef.child("users").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Определяем максимальный id_user
+                //Determine the maximum id_user
                 var maxId = 0
                 for (userSnapshot in snapshot.children) {
                     val idUser = userSnapshot.child("id_user").value.toString().toInt()
@@ -88,19 +90,19 @@ class Products_DB {
                     }
                 }
 
-                // Новый id_user - это максимум + 1
+                //New id_user is maximum + 1
                 val newId = maxId + 1
 
-                // Создаём нового пользователя с новым id_user
+                //Create a new user with a new id_user
                 val userWithId = user.copy(id_user = newId.toString())
 
-                // Сохраняем данные пользователя
+                //Save user's data
                 databaseRef.child("users").child(newId.toString()).setValue(userWithId)
                     .addOnSuccessListener {
                         onSuccess()
                     }
                     .addOnFailureListener { error ->
-                        onError(error.message ?: "Неизвестная ошибка")
+                        onError(error.message ?: "Unknown error")
                     }
             }
 
@@ -173,7 +175,7 @@ class Products_DB {
         return Regex(keyword, RegexOption.IGNORE_CASE).findAll(text).count()
     }
 
-    fun getFavoriteRecipes(userId: Int, onSuccess: (List<Recipe_fav>) -> Unit, onFailure: (String) -> Unit) {
+    fun getFavoriteRecipes(userId: String?, onSuccess: (List<Recipe_fav>) -> Unit, onFailure: (String) -> Unit) {
         val database = real_db.reference
 
         //Get a list of favorite recipes for the user by id

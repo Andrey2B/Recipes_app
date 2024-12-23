@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    }
 
-}
+
 
 android {
     namespace = "com.example.recipeappkotlinproject"
@@ -40,9 +43,17 @@ android {
         viewBinding = true
     }
 
+
+
 }
 
 dependencies {
+
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-database-ktx")
+
+    implementation ("androidx.activity:activity-ktx:1.2.3")
+    implementation ("com.squareup.picasso:picasso:2.71828")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
@@ -54,6 +65,7 @@ dependencies {
     implementation(libs.firebase.database)
     //implementation(libs.androidx.animation.core.android)
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.firebase.storage.ktx)
     //kapt ("com.github.bumptech.glide:compiler:4.15.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
