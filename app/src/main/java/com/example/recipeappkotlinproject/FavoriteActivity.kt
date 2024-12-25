@@ -38,13 +38,13 @@ class FavoriteActivity : AppCompatActivity() {
             insets
         }
 
-        //Get userId from Intent
+        // Get userId from Intent
         val userId = intent.getIntExtra("USER_ID", -1) //Default -1 if no data
 
         if (userId != -1) {
             loadFavoriteRecipes(userId)
         } else {
-            Toast.makeText(this, "Favorite recipes could not be loaded. Try again.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Не удалось загрузить любимые рецепты. Попробуйте еще раз.", Toast.LENGTH_SHORT).show()
         }
 
         loadFavoriteRecipes(userId)
@@ -61,17 +61,17 @@ class FavoriteActivity : AppCompatActivity() {
     private fun loadFavoriteRecipes(userId: Int) {
         database.child("users").child(userId.toString()).get()
             .addOnSuccessListener { userSnapshot ->
-                //Get a list favorite recipes IDs
+                // Get a list favorite recipes IDs
                 val favoriteIds = userSnapshot.child("id_favourite_recipes").value.toString()
                     .split(",").mapNotNull { it.trim().toIntOrNull() }
 
                 if (favoriteIds.isEmpty()) {
                     Log.e(TAG, "No favorite recipe")
-                    Toast.makeText(this, "No favorite recipes found.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Любимых рецептов не найдено.", Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
 
-                //Load data of recipes
+                // Load data of recipes
                 database.child("recipes").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(recipesSnapshot: DataSnapshot) {
                         val favoriteRecipes = favoriteIds.mapNotNull { id ->
@@ -89,22 +89,22 @@ class FavoriteActivity : AppCompatActivity() {
 
                         if (favoriteRecipes.isEmpty()) {
                             Log.e(TAG, "No favorite recipes found.")
-                            Toast.makeText(this@FavoriteActivity, "No favorite recipes found.", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this@FavoriteActivity, "Любимых рецептов не найдено.", Toast.LENGTH_SHORT).show()
                         } else {
-                            //Set Adapter for RecyclerView
+                            // Set Adapter for RecyclerView
                             binding.favoriteRecyclerView.adapter = FavoriteRecipeAdapter(favoriteRecipes)
                         }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(this@FavoriteActivity, "Failed to load recipes", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@FavoriteActivity, "Не удалось загрузить рецепты.", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "Failed to fetch recipes: ${error.message}")
                     }
                 })
             }
             .addOnFailureListener { error ->
                 Log.e(TAG, "Failed to fetch user data: ${error.message}")
-                Toast.makeText(this, "Failed to load user data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Не удалось загрузить пользовательские данные", Toast.LENGTH_SHORT).show()
             }
     }
 

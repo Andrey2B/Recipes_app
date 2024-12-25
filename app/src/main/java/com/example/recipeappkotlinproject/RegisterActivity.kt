@@ -14,141 +14,192 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import android.Manifest
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.storage.FirebaseStorage
+import com.example.recipeappkotlinproject.databinding.UserRegBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.io.File
 import java.io.IOException
+import com.yandex.disk.rest.Credentials
+import com.yandex.disk.rest.RestClient
 
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: DatabaseReference
-    private lateinit var imageView : ImageView //for prof_pic
+    private lateinit var binding: UserRegBinding
     private var imageUri: Uri? = null
 
-
-
-    //Register a handler for the camera
     private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
         if (isSuccess) {
             imageUri?.let {
-                imageView.setImageURI(it) //Displaying photos in ImageView
+                binding.profileImageView.setImageURI(it)
             }
         } else {
-            Toast.makeText(this, "Camera failed to capture image", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Не удалось сделать снимок.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //Register a handler for selecting photos from the gallery
     private val openGalleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            imageView.setImageURI(it) //Displaying photos in ImageView
+            binding.profileImageView.setImageURI(it)
         }
     }
-
-    private val galleryRequestCode = 100
-    private val cameraRequestCode = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_reg)
+        binding = UserRegBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        //Initializing FirebaseAuth
-        auth = FirebaseAuth.getInstance()
-        imageView = findViewById(R.id.imageView)
+        auth = Firebase.auth
 
-        val emailEditText = findViewById<EditText>(R.id.emailEditText)
-        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-        val confirmPasswordEditText = findViewById<EditText>(R.id.confirmPasswordEditText)
-        val nicknameEditText = findViewById<EditText>(R.id.nicknameEditText)
-        val registerButton = findViewById<Button>(R.id.regButton)
+        binding.regButton.setOnClickListener {
+            signUpUser()
+        }
 
-
-        val selectPhotoButton = findViewById<Button>(R.id.selectPhotoButton)
-
-        selectPhotoButton.setOnClickListener{
+        binding.selectPhotoButton.setOnClickListener {
             showImageSourceDialog()
         }
+    }
 
-        registerButton.setOnClickListener {
-            val nickname = nicknameEditText.text.toString()
-            val email = emailEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            val confirmPassword = confirmPasswordEditText.text.toString()
+    private fun signUpUser() {
+        val email = binding.emailEditText.text.toString().trim()
+        val pass = binding.passwordEditText.text.toString().trim()
+        val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
+        val nickname = binding.nicknameEditText.text.toString().trim()
 
-            if (email.isNotEmpty() && nickname.isNotEmpty() && password.isNotEmpty()  && confirmPassword.isNotEmpty()) {
-                if (password != confirmPassword) {
-                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
+        if (email.isBlank() || pass.isBlank() || confirmPassword.isBlank() || nickname.isBlank()) {
+            Toast.makeText(this, "Все обязательные поля должны быть заполнены.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-                checkNicknameUnique(nickname, email, password)
+        if (pass != confirmPassword) {
+            Toast.makeText(this, "Пароли не совпадают.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Log.d("RegisterActivity", "Checking nickname uniqueness")
+        checkNicknameUnique(nickname) { isUnique ->
+            Log.d("RegisterActivity", "Nickname uniqueness check finished")
+            if (!isUnique) {
+                Toast.makeText(this, "Никнейм уже занят, выберите другой.", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+                Log.d("RegisterActivity", "Creating user in Firebase")
+                auth.createUserWithEmailAndPassword(email, pass)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            Log.d("RegisterActivity", "User created successfully")
+                            imageUri?.let {
+                                uploadProfileImageToYandexDisk(it) { imageUrl ->
+                                    saveUserToDatabase(nickname, email, imageUrl)
+                                }
+                            } ?: saveUserToDatabase(nickname, email, null)
+                        } else {
+                            Toast.makeText(this, "Ошибка регистрации: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             }
         }
     }
 
-    private fun checkNicknameUnique(nickname: String, email: String, password: String) {
+
+    private fun checkNicknameUnique(nickname: String, callback: (Boolean) -> Unit) {
+        val database = FirebaseDatabase.getInstance().reference
+        database.child("users")
+            .orderByChild("name_user")
+            .equalTo(nickname)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                Log.d("RegisterActivity", "Nickname check successful: ${snapshot.exists()}")
+                if (snapshot.exists()) {
+                    Log.d("RegisterActivity", "Nickname already exists")
+                } else {
+                    Log.d("RegisterActivity", "Nickname is unique")
+                }
+                callback(!snapshot.exists())  // Никнейм уникален, если его нет в базе
+            }
+            .addOnFailureListener { e ->
+                Log.e("RegisterActivity", "Error checking nickname: ${e.message}")
+                Toast.makeText(this, "Ошибка проверки никнейма.", Toast.LENGTH_SHORT).show()
+                callback(false)
+            }
+    }
+
+    private fun saveUserToDatabase(nickname: String, email: String, profileImageUrl: String?) {
+        val userId = auth.currentUser?.uid ?: return
         val database = FirebaseDatabase.getInstance().reference
 
-        //Request to the database to check if such a nickname already exists
-        database.child("users").orderByChild("name_user").equalTo(nickname).get()
-            .addOnSuccessListener { snapshot ->
-                if (snapshot.exists()) {
-                    Toast.makeText(this, "Nickname already taken. Please choose another.", Toast.LENGTH_SHORT).show()
-                } else {
-                    saveUserToDatabase(nickname, email, password)
-                }
+        val user = mapOf(
+            "id_user" to userId,
+            "name_user" to nickname,
+            "email" to email,
+            "id_favourite_recipes" to "",
+            "face_pic" to (profileImageUrl ?: "")
+        )
+
+        database.child("users").child(userId).setValue(user)
+            .addOnSuccessListener {
+                Log.d("RegisterActivity", "Данные пользователя успешно сохранены в Firebase.")
+                Toast.makeText(this, "Регистрация завершена успешно!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error checking nickname: ${exception.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Log.e("RegisterActivity", "Ошибка сохранения данных: ${e.message}")
+                Toast.makeText(this, "Ошибка сохранения данных пользователя: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    private fun uploadProfileImageToYandexDisk(imageUri: Uri, callback: (String?) -> Unit) {
+        val accessToken = "y0__wgBEMeJlMkBGMyKNCDQuNDtEUkzRTuBEJdy2AesftXpV8eXwaFL&token_type=bearer&expires_in=31536000"
+        val credentials = Credentials("com.example.recipeappkotlinproject", accessToken)
+        val restClient = RestClient(credentials)
 
-        when (requestCode) {
-            galleryRequestCode -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permission to read the gallery has been received, open the gallery
-                    openGallery()
-                } else {
-                    Toast.makeText(this, "Permission denied for gallery", Toast.LENGTH_SHORT).show()
-                }
-            }
-            cameraRequestCode -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permission for the camera has been received, open the camera
-                    openCamera()
-                } else {
-                    Toast.makeText(this, "Permission denied for camera", Toast.LENGTH_SHORT).show()
-                }
-            }
+        val file = File(imageUri.path ?: run {
+            Toast.makeText(this, "Ошибка: файл изображения не найден.", Toast.LENGTH_SHORT).show()
+            return callback(null)
+        })
+
+        if (!file.exists()) {
+            Toast.makeText(this, "Файл изображения не существует.", Toast.LENGTH_SHORT).show()
+            return callback(null)
+        }
+
+        val remotePath = "/profile_photos/${file.name}"
+
+        try {
+            // Upload the file to Yandex Disk
+            //restClient.uploadFile(remotePath, true, file, null)
+
+            // Receive a link to publish the file
+            val link = restClient.publish(remotePath)
+
+            // Check and return the link to the downloaded file
+            callback(link.href)
+        } catch (e: Exception) {
+            Log.e("RegisterActivity", "Error uploading to Yandex.Disk: ${e.message}")
+            Toast.makeText(this, "Ошибка загрузки фотографии профиля.", Toast.LENGTH_SHORT).show()
+            callback(null)
         }
     }
 
 
 
-    //Show dialog for selecting photo source (gallery or camera)
     private fun showImageSourceDialog() {
-        val options = arrayOf("Gallery", "Camera")
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Select Image Source")
-        builder.setItems(options) { dialog, which ->
-            when (which) {
-                0 -> openGallery()  //Gallery
-                1 -> openCamera()   //Camera
+        val options = arrayOf("Галерея", "Камера")
+        AlertDialog.Builder(this)
+            .setTitle("Выберите источник изображения")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openGallery()
+                    1 -> openCamera()
+                }
             }
-        }
-        builder.show()
+            .show()
     }
-
 
     private fun openGallery() {
         openGalleryLauncher.launch("image/*")
@@ -157,137 +208,24 @@ class RegisterActivity : AppCompatActivity() {
     private fun openCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             try {
-                //Create a file for photo
                 val photoFile = createImageFile()
-                //Getting the URI for a file using FileProvider
                 imageUri = FileProvider.getUriForFile(
                     this,
                     "com.example.recipeappkotlinproject.fileprovider",
                     photoFile
                 )
-                //Launch the camera with the correct URI
-                imageUri?.let {
-                    takePictureLauncher.launch(it)
-                } ?: run {
-                    Toast.makeText(this, "Error: Image URI is null", Toast.LENGTH_SHORT).show()
-                }
+                imageUri?.let { takePictureLauncher.launch(it) }
             } catch (ex: IOException) {
-                Toast.makeText(this, "Error creating photo file", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Ошибка создания файла для фото", Toast.LENGTH_SHORT).show()
             }
         } else {
-            //If there is no permission for the camera, request it
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), cameraRequestCode)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
         }
     }
 
-
-    // Create a file for photo
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        val imageFileName = "profile_photo"
-        val storageDir: File = getExternalFilesDir(null) ?: throw IOException("Unable to get storage directory")
-        return File.createTempFile(imageFileName, ".jpg", storageDir)
+        val storageDir: File = getExternalFilesDir(null) ?: throw IOException("Невозможно получить каталог для хранения")
+        return File.createTempFile("profile_photo", ".jpg", storageDir)
     }
-
-    //Processing the result of selecting a photo or shooting
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                galleryRequestCode -> {
-                    val selectedImageUri: Uri? = data?.data
-                    selectedImageUri?.let {
-                        imageView.setImageURI(it)
-                    }
-                }
-                cameraRequestCode -> {
-                    imageUri?.let {
-                        imageView.setImageURI(it)
-                    }
-                }
-            }
-        }
-    }
-
-
-    private fun saveUserToDatabase(nickname: String, email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    Toast.makeText(this, "Registration successful for ${user?.email}", Toast.LENGTH_SHORT).show()
-
-                    //Create a User object
-                    val newUser = Products_DB.User(
-                        id_user = user?.uid.toString(),  //Use the user UID for id_user
-                        name_user = nickname,
-                        email = email,
-                        password = password,
-                        id_favourite_recipes = ""
-                    )
-
-                    //Checking if the photo has been selected
-                    if (imageUri != null) {
-                        //Uploading photos to Firebase Storage
-                        val storageRef = FirebaseStorage.getInstance().reference.child("profile_photos/${user?.uid}.jpg")
-                        storageRef.putFile(imageUri!!)
-                            .addOnSuccessListener { taskSnapshot ->
-                                //We get a link to the image after downloading
-                                storageRef.downloadUrl.addOnSuccessListener { uri ->
-                                    //Add a link to the photo to the user object in the face_pic field
-                                    newUser.face_pic = uri.toString()
-
-                                    //Save the user in Firebase Database
-                                    val usersRef = database.child("users")
-                                    usersRef.child(user?.uid ?: "").setValue(newUser)
-                                        .addOnCompleteListener { dbTask ->
-                                            if (dbTask.isSuccessful) {
-                                                Toast.makeText(this, "User saved to database", Toast.LENGTH_SHORT).show()
-                                                //Go to the Home screen
-                                                val intent = Intent(this, MainActivity::class.java)
-                                                startActivity(intent)
-                                                finish()  //Close the registration screen
-                                            } else {
-                                                Toast.makeText(this, "Failed to save user in database", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                Toast.makeText(this, "Failed to upload photo: ${exception.message}", Toast.LENGTH_SHORT).show()
-                            }
-                    } else {
-                        //If no photo is selected, save the user without photo
-                        val usersRef = database.child("users")
-                        usersRef.child(user?.uid ?: "").setValue(newUser)
-                            .addOnCompleteListener { dbTask ->
-                                if (dbTask.isSuccessful) {
-                                    Toast.makeText(this, "User saved to database", Toast.LENGTH_SHORT).show()
-                                    //Go to the Home screen
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
-                                    finish()  //Close the registration screen
-                                } else {
-                                    Toast.makeText(this, "Failed to save user in database", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                    }
-
-                    val database = FirebaseDatabase.getInstance().reference
-                    val productsDb = Products_DB()
-
-                    productsDb.saveUserToDatabase(database, newUser, {
-                        Toast.makeText(this, "User saved in DB", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }, {
-                        Toast.makeText(this, "Failed to save user: $it", Toast.LENGTH_SHORT).show()
-                    })
-                } else {
-                    Toast.makeText(this, "${task.exception?.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-    }
-
 }

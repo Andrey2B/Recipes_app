@@ -9,8 +9,9 @@
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="292dp"
+        android:layout_marginBottom="80dp"
         android:hint="Email"
+        android:padding="16dp"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         tools:layout_editor_absoluteX="0dp" />
@@ -19,7 +20,8 @@
         android:id="@+id/nicknameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nickname"
+        android:hint="Никнейм"
+        android:padding="16dp"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/emailEditText"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="108dp"
-        android:hint="Password"
+        android:hint="Пароль"
+        android:padding="16dp"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/confirmPasswordEditText"
         tools:layout_editor_absoluteX="0dp" />
@@ -40,13 +43,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="172dp"
-        android:hint="Confirm Password"
+        android:hint="Повторный пароль"
+        android:padding="16dp"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/selectPhotoButton"
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/profileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
@@ -60,7 +64,8 @@
         android:id="@+id/selectPhotoButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Photo"
+        android:text="Выбрать фото"
+        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/regButton"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -68,7 +73,8 @@
         android:id="@+id/regButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="Зарегистрироваться"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 

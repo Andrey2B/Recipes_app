@@ -50,7 +50,8 @@ android {
 dependencies {
 
     implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx")
+
+    implementation ("com.yandex.android:disk-restapi-sdk:1.03")
 
     implementation ("androidx.activity:activity-ktx:1.2.3")
     implementation ("com.squareup.picasso:picasso:2.71828")
@@ -63,10 +64,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.database)
-    //implementation(libs.androidx.animation.core.android)
+
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.firebase.storage.ktx)
-    //kapt ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

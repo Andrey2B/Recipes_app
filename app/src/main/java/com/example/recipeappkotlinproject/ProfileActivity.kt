@@ -40,7 +40,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
-    // UI elements
     private lateinit var profileImageView: ImageView
     private lateinit var nicknameTextView: TextView
     private lateinit var emailTextView: TextView
@@ -48,11 +47,11 @@ class ProfileActivity : AppCompatActivity() {
     // Register for activity result to pick image from gallery
     private val getImageFromGallery = registerForActivityResult(ActivityResultContracts.GetContent(), ActivityResultCallback { uri ->
         uri?.let {
-            // Обновляем изображение профиля
+            // Updating your profile picture
             profileImageView.setImageURI(it)
 
-            // Загружаем фотографию в Firebase Storage и обновляем ссылку в базе данных
-            uploadProfileImageToFirebase(it)
+            // Upload the photo to Firebase Storage and update the link in the database
+            //uploadProfileImageToFirebase(it)
         }
     })
 
@@ -63,7 +62,6 @@ class ProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
-        // Инициализация UI элементов
         profileImageView = findViewById(R.id.profileImageView)
         nicknameTextView = findViewById(R.id.nicknameTextView)
         emailTextView = findViewById(R.id.emailTextView)
@@ -86,7 +84,7 @@ class ProfileActivity : AppCompatActivity() {
             //Logic of change
             //Go to activity to change password
             //val intent = Intent(this, ChangePasswordActivity::class.java)
-            startActivity(intent)
+            //startActivity(intent)
         }
 
         changePhotoButton.setOnClickListener {
@@ -105,20 +103,19 @@ class ProfileActivity : AppCompatActivity() {
             deleteAccount()
         }
 
-        deletePhotoButton.setOnClickListener {
-            deleteProfilePhoto()
-        }
+        //deletePhotoButton.setOnClickListener {
+        //    deleteProfilePhoto()
+        //}
     }
 
     private fun loadUserData(userId: String) {
         val currentUser = auth.currentUser
         val userEmail = currentUser?.email
 
-        // Запрос к базе данных
         database.child("users").get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists() && snapshot.hasChildren()) {
-                    // Проходим по всем элементам массива users
+                    // Iterate through all elements of the users list
                     for (child in snapshot.children) {
                         val email = child.child("email").getValue(String::class.java)
                         if (email == userEmail) {
@@ -146,111 +143,80 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun uploadProfileImageToFirebase(uri: Uri) {
-        //Upload an image to Firebase Storage
-        val storageReference = FirebaseStorage.getInstance().getReference("profile_pics/${auth.currentUser?.uid}")
 
-        storageReference.putFile(uri)
-            .addOnSuccessListener {
-                storageReference.downloadUrl.addOnSuccessListener { downloadUri ->
-                    //Save a link to an image in the Firebase database
-                    val database = FirebaseDatabase.getInstance().getReference("users").child(auth.currentUser?.uid!!)
-                    database.child("face_pic").setValue(downloadUri.toString())
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Profile picture updated successfully", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(this, "Failed to update profile picture: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to upload image: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun deleteProfilePhoto() {
-        //Remove a profile photo from Firebase Storage
-        val storageReference = FirebaseStorage.getInstance().getReference("profile_pics/${auth.currentUser?.uid}")
-        storageReference.delete()
-            .addOnSuccessListener {
-                //Remove a link to a photo from the Firebase Realtime Database
-                val database = FirebaseDatabase.getInstance().getReference("users").child(auth.currentUser?.uid!!)
-                database.child("face_pic").setValue("")
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Profile picture deleted successfully", Toast.LENGTH_SHORT).show()
-                        //profileImageView.setImageResource(R.drawable.default_profile_picture)
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Failed to delete profile picture: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to delete profile picture: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
 
     private fun deleteAccount() {
-        // Получаем текущего пользователя
         val user = auth.currentUser
         val userEmail = user?.email
 
-        // Создаем диалог для ввода пароля
+        // Create a dialog for entering a password
         val passwordEditText = EditText(this)
         passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Enter Password")
-            .setMessage("Please enter your password to confirm account deletion.")
+            .setTitle("Введите пароль")
+            .setMessage("Пожалуйста, введите ваш пароль для подтверждения удаления аккаунта.")
             .setView(passwordEditText)
-            .setPositiveButton("Confirm") { _, _ ->
+            .setPositiveButton("Подтвердить") { _, _ ->
+
                 val password = passwordEditText.text.toString()
 
-                // Проверяем, что введен пароль
                 if (password.isEmpty()) {
-                    Toast.makeText(this, "Password cannot be empty.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Введите пароль.", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
-                // Создаем учетные данные для повторной аутентификации
+                // Creating credentials for re-authentication
                 val credential = userEmail?.let { EmailAuthProvider.getCredential(it, password) }
 
-                // Проверяем, что credential не равно null
                 if (credential == null) {
-                    Toast.makeText(this, "Error: Unable to create credentials.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Ошибка: невозможно создать учетные данные.", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                // Выполняем повторную аутентификацию
+
+                // Do re-authentication
                 user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
                     if (reauthTask.isSuccessful) {
-                        // Повторная аутентификация успешна, теперь можно удалять аккаунт
-                        user.delete().addOnCompleteListener { deleteTask ->
-                            if (deleteTask.isSuccessful) {
-                                // Если аккаунт успешно удален
-                                Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_SHORT).show()
-
-                                // Переход на экран регистрации
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
-                                finish()  // Завершаем текущую активность
-                            } else {
-                                // Если не удалось удалить аккаунт, показываем ошибку
-                                Toast.makeText(this, "Failed to delete account: ${deleteTask.exception?.message}", Toast.LENGTH_SHORT).show()
-                                Log.e("DeleteAccount", "Error: ${deleteTask.exception?.message}")
-                            }
-                        }
+                        deleteUserData(user.uid) // Remove data from the database
                     } else {
-                        // Если повторная аутентификация не удалась
                         Toast.makeText(this, "Reauthentication failed: ${reauthTask.exception?.message}", Toast.LENGTH_SHORT).show()
                         Log.e("DeleteAccount", "Reauthentication error: ${reauthTask.exception?.message}")
                     }
                 }
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton("Отменить") { dialog, _ ->
                 dialog.dismiss()
             }
 
-        // Показываем диалог
         dialog.show()
     }
+
+    private fun deleteUserData(userId: String) {
+        // Remove data from Firebase Realtime Database
+        val userRef = database.child("users").child(userId)
+
+        userRef.removeValue()
+            .addOnSuccessListener {
+                // The data has been deleted, now we delete the user account
+                val user = auth.currentUser
+                user?.delete()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Аккаунт успешно удален.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Не удалось удалить аккаунт: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        Log.e("DeleteAccount", "Error: ${task.exception?.message}")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Если не удалось удалить данные пользователя из базы
+                Toast.makeText(this, "Не удалось удалить данные пользователя: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.e("DeleteAccount", "Error deleting user data: ${exception.message}")
+            }
+    }
+
+
 }

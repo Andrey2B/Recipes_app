@@ -8,31 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:256995929149:android:1ef6451436e9849dff4e54",
-        "android_client_info": {
-          "package_name": "build.gradle"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBtRagCeFxr06af017mUbZ_Z4kIBk9K6Ps"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:256995929149:android:b34765dfcfc1d29cff4e54",
         "android_client_info": {
           "package_name": "com.example.recipeappkotlinproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "256995929149-c6u8vt3sutnpmrmrm666jvn6a3ps2br8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBtRagCeFxr06af017mUbZ_Z4kIBk9K6Ps"
@@ -40,7 +26,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256995929149-c6u8vt3sutnpmrmrm666jvn6a3ps2br8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

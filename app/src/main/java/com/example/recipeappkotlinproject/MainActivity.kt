@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(){
 
         }
 
-        //Examples of categories
+        // Examples of categories
         val categories = listOf(
             Category("Завтраки", R.drawable.recipe1),
             Category("Обеды", R.drawable.recipe2),
@@ -112,10 +112,10 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
-        //Current user ID
+        // Current user ID
         val userId = auth.currentUser?.uid
 
-        database.getFavoriteRecipes(
+        /*database.getFavoriteRecipes(
             userId,
             onSuccess = { favoriteRecipes ->
                 //Installing the adapter with data from Firebase
@@ -127,11 +127,7 @@ class MainActivity : AppCompatActivity(){
             onFailure = { error ->
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
-        )
-
-
-
-
+        )*/
 
 
 
@@ -147,12 +143,6 @@ class MainActivity : AppCompatActivity(){
         val homeIkon: ImageView
         val favoriteIkon: ImageView
         val profileIkon: ImageView
-
-
-        // val DB = Products_DB()
-        // DB.Save_DB("test1", "122")
-        //DB.Read_DB()
-
 
 
         //var recipesList: RecyclerView
@@ -182,16 +172,18 @@ class MainActivity : AppCompatActivity(){
             checkUserStatusInProfile()
         }
 
+        database.Read_DB()
+
     }
 
     private fun checkUserStatusInFavorite() {
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            //User in the account, perform the action
+            // User in the account, perform the action
             doSomethingForLoggedInUserInFavorite()
         } else {
-            //The user is not logged in, go to the registration/login screen
+            // The user is not logged in, go to the registration/login screen
             navigateToLoginOrRegisterInFavorite()
         }
     }
@@ -218,10 +210,10 @@ class MainActivity : AppCompatActivity(){
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            //User in the account, perform the action
+            // User in the account, perform the action
             doSomethingForLoggedInUserInProfile()
         } else {
-            //The user is not logged in, go to the registration/login screen
+            // The user is not logged in, go to the registration/login screen
             navigateToLoginOrRegisterInProfile()
         }
     }
@@ -241,4 +233,6 @@ class MainActivity : AppCompatActivity(){
         startActivity(intent)
         finish()
     }
+
+
 }
