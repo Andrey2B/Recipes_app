@@ -7,10 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class Category(val name: String, val image: Int)
 
 class CategoryAdapter(private val categories: List<Category>) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+
+    data class Category(val name: String, val image: Int)
+
 
     class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryImage: ImageView = view.findViewById(R.id.category_image)

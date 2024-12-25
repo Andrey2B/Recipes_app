@@ -52,10 +52,9 @@ class MainActivity : AppCompatActivity(){
         }
 
         //Examples of categories
-        val categories = listOf(
-            Category("Завтраки", R.drawable.recipe1),
-            Category("Обеды", R.drawable.recipe2),
-            Category("Ужины", R.drawable.recipe3)
+        val categories = listOf(CategoryAdapter.Category("Завтраки", R.drawable.recipe1),
+            CategoryAdapter.Category("Обеды", R.drawable.recipe2),
+            CategoryAdapter.Category("Ужины", R.drawable.recipe3)
         )
 
         val categoryAdapter = CategoryAdapter(categories)
