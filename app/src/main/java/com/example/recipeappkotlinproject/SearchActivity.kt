@@ -24,24 +24,23 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_recycler)
 
-
-
-        // Инициализация Firebase Database
         databaseRef = FirebaseDatabase.getInstance().reference
-
-        // Инициализация Views
         searchView = findViewById(R.id.searchView)
         emptyStateTextView = findViewById(R.id.emptyStateTextView)
         recipesRecyclerView = findViewById(R.id.recipesRecyclerView)
 
-        // Настройка RecyclerView
         recipeAdapter = RecipeAdapter()
         recipesRecyclerView.layoutManager = LinearLayoutManager(this)
         recipesRecyclerView.adapter = recipeAdapter
 
-        // Настройка SearchView
+        // Получаем данные из Intent
+        val categoryName = intent.getStringExtra("categoryName")
+
+        if (!categoryName.isNullOrEmpty()) {
+            searchRecipesByCategory(categoryName) // Поиск по категории
+        }
+
         setupSearchView()
-        Products_DB().Read_DB()
     }
 
     private fun setupSearchView() {
@@ -60,6 +59,19 @@ class SearchActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    fun searchRecipesByCategory(categoryName: String) {
+        Products_DB().findRecipesByCategory(databaseRef, categoryName) { recipes ->
+            if (recipes.isNotEmpty()) {
+                recipeAdapter.updateRecipes(recipes)
+                recipesRecyclerView.visibility = View.VISIBLE
+                emptyStateTextView.visibility = View.GONE
+            } else {
+                recipesRecyclerView.visibility = View.GONE
+                emptyStateTextView.visibility = View.VISIBLE
+            }
+        }
     }
 
     fun searchRecipes(keyword: String) {

@@ -52,12 +52,17 @@ class MainActivity : AppCompatActivity(){
         }
 
         //Examples of categories
-        val categories = listOf(CategoryAdapter.Category("Завтраки", R.drawable.recipe1),
+        val categories = listOf(
+            CategoryAdapter.Category("Завтраки", R.drawable.recipe1),
             CategoryAdapter.Category("Обеды", R.drawable.recipe2),
             CategoryAdapter.Category("Ужины", R.drawable.recipe3)
         )
 
-        val categoryAdapter = CategoryAdapter(categories)
+        val categoryAdapter = CategoryAdapter(categories) { categoryName ->
+            val intent = Intent(this, SearchActivity::class.java)
+            intent.putExtra("categoryName", categoryName) // Передаем название категории
+            startActivity(intent)
+        }
         binding.categoriesRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.categoriesRecyclerView.adapter = categoryAdapter
@@ -100,20 +105,17 @@ class MainActivity : AppCompatActivity(){
         }
 
 
-// Идентификатор текущего пользователя
         val userId = 1
 
         database.getFavoriteRecipes(
             userId,
             onSuccess = { favoriteRecipes ->
-                // Устанавливаем адаптер с данными из Firebase
                 val recipeAdapter = FavoriteRecipeAdapter(favoriteRecipes)
                 binding.favoriteRecipesRecyclerView.layoutManager =
                     LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
                 binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
             },
             onFailure = { error ->
-                // Обрабатываем ошибку
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
         )
@@ -166,7 +168,6 @@ class MainActivity : AppCompatActivity(){
 
         searchRecipe.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Когда пользователь завершает ввод и нажимает "поиск"
                 if (!query.isNullOrEmpty()) {
                     val intent = Intent(this@MainActivity, SearchActivity::class.java)
                     intent.putExtra("searchQuery", query) // Передаем запрос в SearchActivity
@@ -176,8 +177,7 @@ class MainActivity : AppCompatActivity(){
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Здесь можно реализовать динамическую логику, если нужно обрабатывать ввод в реальном времени
-                return false // Возвращаем false, если не используем обработку в реальном времени
+                return false
             }
         })
 
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity(){
 
 
 
-        //processing of the request and the search
+
 
         database.Read_DB()
     }

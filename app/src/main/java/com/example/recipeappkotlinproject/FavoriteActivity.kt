@@ -50,13 +50,13 @@ class FavoriteActivity : AppCompatActivity() {
             insets
         }
 
-        val userId = 1 // id for every user
+        val userId = 1
         loadFavoriteRecipes(userId)
 
 
         val backButton: ImageView = findViewById(R.id.imageView2)
         backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()  //back previous Activity
+            onBackPressedDispatcher.onBackPressed()
         }
 
     }
@@ -65,7 +65,6 @@ class FavoriteActivity : AppCompatActivity() {
     private fun loadFavoriteRecipes(userId: Int) {
         database.child("users").child(userId.toString()).get()
             .addOnSuccessListener { userSnapshot ->
-                //Get a list favorite recipes IDs
                 val favoriteIds = userSnapshot.child("id_favourite_recipes").value.toString()
                     .split(",").mapNotNull { it.trim().toIntOrNull() }
 
@@ -75,7 +74,6 @@ class FavoriteActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                //Load data of recipes
                 database.child("recipes").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(recipesSnapshot: DataSnapshot) {
                         val favoriteRecipes = favoriteIds.mapNotNull { id ->
@@ -95,7 +93,6 @@ class FavoriteActivity : AppCompatActivity() {
                             Log.e(TAG, "No favorite recipes found.")
                             Toast.makeText(this@FavoriteActivity, "No favorite recipes found.", Toast.LENGTH_SHORT).show()
                         } else {
-                            //Set Adapter for RecyclerView
                             binding.favoriteRecyclerView.adapter = FavoriteRecipeAdapter(favoriteRecipes)
                         }
                     }

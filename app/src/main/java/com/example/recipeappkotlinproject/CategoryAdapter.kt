@@ -8,11 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class CategoryAdapter(private val categories: List<Category>) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(
+    private val categories: List<Category>,
+    private val onCategoryClick: (String) -> Unit // Лямбда-функция для обработки кликов
+) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     data class Category(val name: String, val image: Int)
-
 
     class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val categoryImage: ImageView = view.findViewById(R.id.category_image)
@@ -29,6 +30,9 @@ class CategoryAdapter(private val categories: List<Category>) :
         val category = categories[position]
         holder.categoryImage.setImageResource(category.image)
         holder.categoryName.text = category.name
+        holder.itemView.setOnClickListener {
+            onCategoryClick(category.name) // Передаем имя категории в обработчик
+        }
     }
 
     override fun getItemCount(): Int = categories.size
