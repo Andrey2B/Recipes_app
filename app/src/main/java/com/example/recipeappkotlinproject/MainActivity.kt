@@ -64,12 +64,16 @@ class MainActivity : AppCompatActivity(){
 
         // Examples of categories
         val categories = listOf(
-            Category("Завтраки", R.drawable.recipe1),
-            Category("Обеды", R.drawable.recipe2),
-            Category("Ужины", R.drawable.recipe3)
+            CategoryAdapter.Category("Завтраки", R.drawable.recipe1),
+            CategoryAdapter.Category("Обеды", R.drawable.recipe2),
+            CategoryAdapter.Category("Ужины", R.drawable.recipe3)
         )
 
-        val categoryAdapter = CategoryAdapter(categories)
+        val categoryAdapter = CategoryAdapter(categories) { categoryName ->
+            val intent = Intent(this, SearchActivity::class.java)
+            intent.putExtra("categoryName", categoryName) // Передаем название категории
+            startActivity(intent)
+        }
         binding.categoriesRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.categoriesRecyclerView.adapter = categoryAdapter
@@ -116,6 +120,9 @@ class MainActivity : AppCompatActivity(){
         val userId = auth.currentUser?.uid
 
         /*database.getFavoriteRecipes(
+        val userId = 1
+
+        database.getFavoriteRecipes(
             userId,
             onSuccess = { favoriteRecipes ->
                 //Installing the adapter with data from Firebase
@@ -125,6 +132,7 @@ class MainActivity : AppCompatActivity(){
                 binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
             },
             onFailure = { error ->
+                // Обрабатываем ошибку
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
         )*/
@@ -156,16 +164,31 @@ class MainActivity : AppCompatActivity(){
 
 
 
+
         /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
         }*/
 
+        searchRecipe.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                    intent.putExtra("searchQuery", query) // Передаем запрос в SearchActivity
+                    startActivity(intent)
+                }
+                return true
+            }
 
-        favoriteIkon.setOnClickListener{
-            checkUserStatusInFavorite()
-        }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+
+
+
+
 
 
         profileIkon.setOnClickListener{
@@ -196,7 +219,6 @@ class MainActivity : AppCompatActivity(){
 
         //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
     }
-
     private fun navigateToLoginOrRegisterInFavorite() {
         //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, LoginActivity::class.java)
@@ -222,17 +244,16 @@ class MainActivity : AppCompatActivity(){
         val userId = auth.currentUser?.uid
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("USER_ID", userId)
-        this.startActivity(intent)
+        this.startActivity(intent)}
 
-        //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
-    }
+
+
+
+
 
     private fun navigateToLoginOrRegisterInProfile() {
         //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
-    }
 
-
-}

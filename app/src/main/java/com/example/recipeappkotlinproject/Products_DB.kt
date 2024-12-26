@@ -10,7 +10,12 @@ import com.google.firebase.database.ValueEventListener
 
 class Products_DB {
 
-    data class Recipe(val image_url: String = "", val name_recipe: String = "", val id_recipe: String = "")
+    data class Recipe(
+        val id_recipe: String = "",
+        val name_recipe: String = "",
+        val image_url: String = "",
+        val time_recipe: String = ""
+    )
 
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
@@ -33,7 +38,6 @@ class Products_DB {
     ) {
         databaseRef.child("recipes").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Определяем максимальный id_recipe
                 var maxId = 0
                 for (recipeSnapshot in snapshot.children) {
                     val idRecipe = recipeSnapshot.child("id_recipe").value.toString().toInt()
@@ -48,7 +52,6 @@ class Products_DB {
 
                 val recipeWithId = recipe.copy(id_recipe = newId.toString())
 
-                // Сохраняем данные рецепта
                 databaseRef.child("recipes").child(newId.toString()).setValue(recipeWithId)
                     .addOnSuccessListener {
                         onSuccess()
@@ -72,6 +75,14 @@ class Products_DB {
         val id_favourite_recipes: String = "",
         var face_pic: String = ""
     )
+
+    fun deleteUser(
+        databaseRef: DatabaseReference,
+        id_user: Int
+    )
+    {
+        databaseRef.child("users").child(id_user.toString())
+    }
 
     fun saveUserToDatabase(
         databaseRef: DatabaseReference,
@@ -137,6 +148,47 @@ class Products_DB {
         })
     }
 
+    fun findRecipesByCategory(
+        databaseRef: DatabaseReference,
+        categoryName: String,
+        resultCallback: (List<Recipe>) -> Unit
+    ) {
+        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val recipesList = mutableListOf<Recipe>()
+
+                val categorySnapshot = snapshot.child("categories").children.find {
+                    it.child("name_category").value.toString() == categoryName
+                }
+
+                if (categorySnapshot != null) {
+                    Log.d("findR_C", "success")
+                    val recipeIds = categorySnapshot.child("id_category").value as? List<String>
+                    if (recipeIds != null) {
+                        for (id in recipeIds) {
+                            val recipeSnapshot = snapshot.child("recipes").child(id)
+                            if (recipeSnapshot.exists()) {
+                                val recipe = Recipe(
+                                    id_recipe = recipeSnapshot.child("id_recipe").value.toString(),
+                                    name_recipe = recipeSnapshot.child("name_recipe").value.toString(),
+                                    image_url = recipeSnapshot.child("image_url").value.toString(),
+                                    time_recipe = recipeSnapshot.child("time_recipe").value.toString()
+                                )
+                                recipesList.add(recipe)
+                            }
+                        }
+                    }
+                }
+
+                resultCallback(recipesList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                resultCallback(emptyList())
+            }
+        })
+    }
+
 
     fun findRecipeByName(databaseRef: DatabaseReference, keyword: String, resultCallback: (List<Recipe>) -> Unit) {
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -146,7 +198,7 @@ class Products_DB {
                 if (snapshot.exists()) {
                     for (snap in snapshot.child("recipes").children) {
                         val recipeMap = snap.value as? Map<*, *>
-                        println(recipeMap.toString())
+
                         if (recipeMap != null) {
                             val recipe = Recipe(
                                 id_recipe = recipeMap["id_recipe"]?.toString() ?: "",
@@ -178,7 +230,7 @@ class Products_DB {
     fun getFavoriteRecipes(userId: String?, onSuccess: (List<Recipe_fav>) -> Unit, onFailure: (String) -> Unit) {
         val database = real_db.reference
 
-        //Get a list of favorite recipes for the user by id
+
         database.child("users").child(userId.toString()).child("id_favourite_recipes")
             .get()
             .addOnSuccessListener { snapshot ->
@@ -191,7 +243,7 @@ class Products_DB {
                     return@addOnSuccessListener
                 }
 
-                //Load data from tables of recipes by id
+
                 database.child("recipes").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val favoriteRecipes = favoriteIds.mapNotNull { id ->
