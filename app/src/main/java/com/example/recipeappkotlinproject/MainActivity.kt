@@ -30,14 +30,14 @@ data class Recipe_fav(
     val image: String
 )
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
 
-
     lateinit var binding: ActivityMainBinding
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(){
 
         auth = FirebaseAuth.getInstance()
 
-        binding.imageView.setOnClickListener{
+        binding.imageView.setOnClickListener {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.filter_holder, FilterFragment.newInstance())
@@ -78,16 +78,16 @@ class MainActivity : AppCompatActivity(){
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.categoriesRecyclerView.adapter = categoryAdapter
 
-        /*val fav_recipes = listOf(
-            Recipe_fav("Пирог", R.drawable.recipe1),
-            Recipe_fav("Салат", R.drawable.recipe2),
-            Recipe_fav("Блины", R.drawable.recipe3)
-        )*/
+        val fav_recipes = listOf(
+            Recipe_fav("Пирог", R.drawable.recipe1.toString()),
+            Recipe_fav("Салат", R.drawable.recipe2.toString()),
+            Recipe_fav("Блины", R.drawable.recipe3.toString())
+        )
 
-        /*val recipeAdapter = FavoriteRecipeAdapter(fav_recipes)
+        val recipeAdapter = FavoriteRecipeAdapter(fav_recipes)
         binding.favoriteRecipesRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.favoriteRecipesRecyclerView.adapter = recipeAdapter*/
+        binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
 
         //Examples of recipes
         /*var recipes = listOf(
@@ -120,6 +120,9 @@ class MainActivity : AppCompatActivity(){
         val userId = auth.currentUser?.uid
 
         /*database.getFavoriteRecipes(
+        val userId = 1
+
+        database.getFavoriteRecipes(
             userId,
             onSuccess = { favoriteRecipes ->
                 //Installing the adapter with data from Firebase
@@ -129,10 +132,10 @@ class MainActivity : AppCompatActivity(){
                 binding.favoriteRecipesRecyclerView.adapter = recipeAdapter
             },
             onFailure = { error ->
+                // Обрабатываем ошибку
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
             }
         )*/
-
 
 
         val searchRecipe: SearchView
@@ -159,7 +162,6 @@ class MainActivity : AppCompatActivity(){
         profileIkon = findViewById(R.id.imageView11)
 
 
-
         /*
         homeIkon.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -167,13 +169,36 @@ class MainActivity : AppCompatActivity(){
         }*/
 
 
-        favoriteIkon.setOnClickListener{
-            checkUserStatusInFavorite()
+
+
+
+
+        searchRecipe.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                    intent.putExtra("searchQuery", query) // Передаем запрос в SearchActivity
+                    startActivity(intent)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+
+
+
+
+
+
+        profileIkon.setOnClickListener {
+            checkUserStatusInProfile()
         }
 
-
-        profileIkon.setOnClickListener{
-            checkUserStatusInProfile()
+        favoriteIkon.setOnClickListener{
+            checkUserStatusInFavorite()
         }
 
         database.Read_DB()
@@ -209,7 +234,6 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-
     private fun checkUserStatusInProfile() {
         val currentUser = auth.currentUser
 
@@ -227,9 +251,8 @@ class MainActivity : AppCompatActivity(){
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("USER_ID", userId)
         this.startActivity(intent)
-
-        //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
     }
+
 
     private fun navigateToLoginOrRegisterInProfile() {
         //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
@@ -237,6 +260,6 @@ class MainActivity : AppCompatActivity(){
         startActivity(intent)
         finish()
     }
-
-
 }
+
+
