@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 class RecipeAdapter(
-    private var recipeList: MutableList<Products_DB.Recipe> = mutableListOf()
+    private var recipeList: MutableList<Products_DB.Recipe> = mutableListOf(),
+    private val onRecipeClick: (Products_DB.Recipe) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
 
@@ -30,6 +31,9 @@ class RecipeAdapter(
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipeList[position]
         holder.bind(recipe)
+        holder.itemView.setOnClickListener {
+            onRecipeClick(recipe)
+        }
     }
 
     override fun getItemCount(): Int {

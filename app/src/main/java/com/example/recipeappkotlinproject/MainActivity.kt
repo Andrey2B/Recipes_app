@@ -18,13 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-data class Recipe(
-    val id_recipe: Int,
-    val name: String,
-    val image: String,
-    val description: String
-)
-
 data class Recipe_fav(
     val name: String,
     val image: String
