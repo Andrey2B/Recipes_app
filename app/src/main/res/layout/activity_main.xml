@@ -8,18 +8,18 @@
     tools:context=".MainActivity">
 
 
-
-    <android.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="96dp"
-        app:layout_constraintBottom_toTopOf="@+id/categoriesRecyclerView"
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="Поиск"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.585"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.04" />
+        app:layout_constraintVertical_bias="0.121" />
 
     <ImageView
         android:id="@+id/imageView9"
@@ -108,6 +108,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
