@@ -31,4 +31,19 @@
         app:layout_constraintVertical_bias="0.912"
         tools:listitem="@layout/item_favorite_recipe" />
 
+    <TextView
+        android:id="@+id/noFavoritesTextView"
+        android:layout_width="251dp"
+        android:layout_height="51dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/favoriteRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

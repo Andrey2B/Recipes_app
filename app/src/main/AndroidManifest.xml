@@ -37,6 +37,8 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+        <activity android:name=".RecipeActivity"
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
@@ -54,7 +56,6 @@
         <activity
             android:name=".SearchActivity"
             android:exported="false" />
-        <activity android:name=".CategoryRecipesActivity" />
 
         <activity
             android:name=".MainActivity"

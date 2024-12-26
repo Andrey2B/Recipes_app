@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
                         baseContext,
-                        "Неверный .",
+                        "Неверный пароль или email.",
                         Toast.LENGTH_SHORT,
                     ).show()
                 }

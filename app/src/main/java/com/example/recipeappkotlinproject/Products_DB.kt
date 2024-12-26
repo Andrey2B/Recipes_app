@@ -14,25 +14,17 @@ class Products_DB {
         val id_recipe: String = "",
         val name_recipe: String = "",
         val image_url: String = "",
-        val time_recipe: String = ""
+        val time_recipe: String = "",
+        val description: String = "",
+        val products: List<String>
     )
 
     val test_db = FirebaseDatabase.getInstance("https://aaa1-8022d-default-rtdb.firebaseio.com/")
     val real_db = FirebaseDatabase.getInstance("https://eat-eat-5f6b6-default-rtdb.firebaseio.com/")
 
-    fun Save_DB(key: String, value: String):Int {
-        val database = test_db
-        val myRef = database.getReference(key)
-        myRef.setValue(value)
-        myRef.removeValue()
-        Log.d("SAVE", "Saved")
-        return 1
-    }
-
     fun saveRecipeToDatabase(
         databaseRef: DatabaseReference,
         recipe: Recipe,
-
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
@@ -172,7 +164,9 @@ class Products_DB {
                                     id_recipe = recipeSnapshot.child("id_recipe").value.toString(),
                                     name_recipe = recipeSnapshot.child("name_recipe").value.toString(),
                                     image_url = recipeSnapshot.child("image_url").value.toString(),
-                                    time_recipe = recipeSnapshot.child("time_recipe").value.toString()
+                                    time_recipe = recipeSnapshot.child("time_recipe").value.toString(),
+                                    description = recipeSnapshot.child("description").value.toString(),
+                                    products =recipeSnapshot.child("products").children.mapNotNull { it.value?.toString() }
                                 )
                                 recipesList.add(recipe)
                             }
@@ -203,7 +197,10 @@ class Products_DB {
                             val recipe = Recipe(
                                 id_recipe = recipeMap["id_recipe"]?.toString() ?: "",
                                 name_recipe = recipeMap["name_recipe"]?.toString() ?: "",
-                                image_url = recipeMap["image_url"]?.toString() ?: ""
+                                image_url = recipeMap["image_url"]?.toString() ?: "",
+                                time_recipe = snap.child("time_recipe").value.toString(),
+                                description = snap.child("description").value.toString(),
+                                products = snap.child("products").children.mapNotNull { it.value.toString() }
                             )
                             val count = countKeywordOccurrences(recipe.name_recipe, keyword)
                             if (count > 0) {
