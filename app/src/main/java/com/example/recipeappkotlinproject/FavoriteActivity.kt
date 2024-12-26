@@ -3,7 +3,9 @@ package com.example.recipeappkotlinproject
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,13 +40,17 @@ class FavoriteActivity : AppCompatActivity() {
             insets
         }
 
+        val noFavoritesTextView = findViewById<TextView>(R.id.noFavoritesTextView)
+        noFavoritesTextView.visibility = View.GONE // Initially hidden
+
+
         // Get userId from Intent
         val userId = intent.getIntExtra("USER_ID", -1) //Default -1 if no data
 
         if (userId != -1) {
             loadFavoriteRecipes(userId)
         } else {
-            Toast.makeText(this, "Не удалось загрузить любимые рецепты. Попробуйте еще раз.", Toast.LENGTH_SHORT).show()
+            Log.e("FavoriteActivity", "Failed to load favorite recipes. Please try again.")
         }
 
         loadFavoriteRecipes(userId)
@@ -67,6 +73,11 @@ class FavoriteActivity : AppCompatActivity() {
 
                 if (favoriteIds.isEmpty()) {
                     Log.e(TAG, "No favorite recipe")
+                    val noFavoritesTextView = findViewById<TextView>(R.id.noFavoritesTextView)
+
+                    noFavoritesTextView.visibility = View.VISIBLE // Show the "no favorites" message
+                    noFavoritesTextView.text = "У вас нет любимых рецептов."
+                    binding.favoriteRecyclerView.visibility = View.GONE // Hide the RecyclerView
                     //Toast.makeText(this, "Любимых рецептов не найдено.", Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
@@ -89,8 +100,15 @@ class FavoriteActivity : AppCompatActivity() {
 
                         if (favoriteRecipes.isEmpty()) {
                             Log.e(TAG, "No favorite recipes found.")
+                            val noFavoritesTextView = findViewById<TextView>(R.id.noFavoritesTextView)
+                            noFavoritesTextView.visibility = View.VISIBLE // Show the "no favorites" message
+                            noFavoritesTextView.text = "У Вас нет любимых рецептов."
+                            binding.favoriteRecyclerView.visibility = View.GONE // Hide the RecyclerView
                             //Toast.makeText(this@FavoriteActivity, "Любимых рецептов не найдено.", Toast.LENGTH_SHORT).show()
                         } else {
+                            val noFavoritesTextView = findViewById<TextView>(R.id.noFavoritesTextView)
+                            noFavoritesTextView.visibility = View.GONE // Hide the "no favorites" message
+                            binding.favoriteRecyclerView.visibility = View.VISIBLE // Show the RecyclerView
                             // Set Adapter for RecyclerView
                             binding.favoriteRecyclerView.adapter = FavoriteRecipeAdapter(favoriteRecipes)
                         }
