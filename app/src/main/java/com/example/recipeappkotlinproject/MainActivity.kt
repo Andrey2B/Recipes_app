@@ -30,14 +30,14 @@ data class Recipe_fav(
     val image: String
 )
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
 
-
     lateinit var binding: ActivityMainBinding
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(){
 
         auth = FirebaseAuth.getInstance()
 
-        binding.imageView.setOnClickListener{
+        binding.imageView.setOnClickListener {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.filter_holder, FilterFragment.newInstance())
@@ -138,7 +138,6 @@ class MainActivity : AppCompatActivity(){
         )*/
 
 
-
         val searchRecipe: SearchView
         val filterIkon: ImageView
         val shoppingBasket: Button
@@ -161,8 +160,6 @@ class MainActivity : AppCompatActivity(){
         favoriteIkon = findViewById(R.id.imageView9)
         homeIkon = findViewById(R.id.imageView10)
         profileIkon = findViewById(R.id.imageView11)
-
-
 
 
         /*
@@ -191,7 +188,7 @@ class MainActivity : AppCompatActivity(){
 
 
 
-        profileIkon.setOnClickListener{
+        profileIkon.setOnClickListener {
             checkUserStatusInProfile()
         }
 
@@ -219,13 +216,13 @@ class MainActivity : AppCompatActivity(){
 
         //Toast.makeText(this, "You are logged in!", Toast.LENGTH_SHORT).show()
     }
+
     private fun navigateToLoginOrRegisterInFavorite() {
         //Toast.makeText(this, "You are not logged in.", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
-
 
 
     private fun checkUserStatusInProfile() {
@@ -244,11 +241,8 @@ class MainActivity : AppCompatActivity(){
         val userId = auth.currentUser?.uid
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("USER_ID", userId)
-        this.startActivity(intent)}
-
-
-
-
+        this.startActivity(intent)
+    }
 
 
     private fun navigateToLoginOrRegisterInProfile() {
@@ -256,4 +250,7 @@ class MainActivity : AppCompatActivity(){
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+}
+
 
