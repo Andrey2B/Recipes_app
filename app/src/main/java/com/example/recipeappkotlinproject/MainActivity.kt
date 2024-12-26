@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         val searchRecipe: SearchView
         val filterIkon: ImageView
         val shoppingBasket: Button
+        val searchButton: Button
         val categoryRecipes1: ImageView
         val categoryRecipes2: ImageView
         val categoryRecipes3: ImageView
@@ -147,13 +148,13 @@ class MainActivity : AppCompatActivity() {
 
         //var recipesList: RecyclerView
 
-        searchRecipe = findViewById(R.id.searchView)
+
         filterIkon = findViewById(R.id.imageView)
         //shoppingBasket = findViewById(R.id.button2)
         favoriteIkon = findViewById(R.id.imageView9)
         homeIkon = findViewById(R.id.imageView10)
         profileIkon = findViewById(R.id.imageView11)
-
+        searchButton = findViewById(R.id.searchButton)
 
         /*
         homeIkon.setOnClickListener{
@@ -166,20 +167,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        searchRecipe.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    val intent = Intent(this@MainActivity, SearchActivity::class.java)
-                    intent.putExtra("searchQuery", query) // Передаем запрос в SearchActivity
-                    startActivity(intent)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
+        searchButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, SearchActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
