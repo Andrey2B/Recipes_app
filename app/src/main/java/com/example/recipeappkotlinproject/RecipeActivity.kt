@@ -16,6 +16,7 @@ class RecipeActivity : AppCompatActivity() {
         val recipeDescription = intent.getStringExtra("RECIPE_DESCRIPTION")
         val recipeProducts = intent.getStringArrayListExtra("RECIPE_PRODUCTS")
 
+
         val nameTextView: TextView = findViewById(R.id.recipeTitle)
         val descriptionTextView: TextView = findViewById(R.id.recipeDescription)
         val imageView: ImageView = findViewById(R.id.recipeImage)
